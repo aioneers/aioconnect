@@ -5,13 +5,15 @@ import os
 import platform
 
 # Make the Readme.md as long description
-if platform.system() == "Linux":
-    long_description = "not yet working on Databricks"
-else:
-    with open(
-        str(Path(os.path.abspath(__file__)).parent.parent) + "/README.md", "r"
-    ) as fh:
-        long_description = fh.read()
+# if platform.system() == "Linux":
+#     long_description = "not yet working on Databricks"
+# else:
+#     with open(
+#         str(Path(os.path.abspath(__file__)).parent.parent) + "/README.md", "r"
+#     ) as fh:
+#         long_description = fh.read()
+
+long_description = "not yet working"
 
 setuptools.setup(
     name="aioconnect",
@@ -23,7 +25,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/aioneers/aioconnect",
-    downloadurl="https://github.com/aioneers/aioconnect/archive/0.0.1.tar.gz",
+    download_url="https://github.com/aioneers/aioconnect/archive/0.0.1.tar.gz",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
