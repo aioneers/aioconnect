@@ -21,7 +21,7 @@ def test_one_function():
     df["Region"] = regions.values()
     df["City"] = cities.values()
 
-    results = aioconnect.onefunction(
+    results = aioconnect.one_function(
         df,
         primary_dimension="Product",
         secondary_dimensions=["Country", "Region", "City"],
@@ -35,7 +35,7 @@ def test_one_function():
     assert len(results)
 
 
-def test_abc_analysis_wo_additional_dimensions():
+def test_onefunction_wo_additional_dimensions():
     # create sample data
     products, quantities = {}, {}
     np.random.seed(seed=0)
@@ -47,7 +47,7 @@ def test_abc_analysis_wo_additional_dimensions():
     df["Product"] = products.values()
     df["Quantity"] = quantities.values()
 
-    results = aioconnect.abc_analysis(
+    results = aioconnect.one_function(
         df, primary_dimension="Product", numeric_dimension="Quantity"
     )
 
