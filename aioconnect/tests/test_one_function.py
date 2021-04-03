@@ -1,9 +1,9 @@
 import numpy as np
-import aio
+import aioconnect
 import pandas as pd
 
 
-def test_abc_analysis_w_multiple_dimensions():
+def test_one_function():
     # create sample data
     products, quantities, countries, regions, cities = {}, {}, {}, {}, {}
     np.random.seed(seed=0)
@@ -21,7 +21,7 @@ def test_abc_analysis_w_multiple_dimensions():
     df["Region"] = regions.values()
     df["City"] = cities.values()
 
-    results = aio.abc_analysis(
+    results = aioconnect.onefunction(
         df,
         primary_dimension="Product",
         secondary_dimensions=["Country", "Region", "City"],
@@ -47,7 +47,7 @@ def test_abc_analysis_wo_additional_dimensions():
     df["Product"] = products.values()
     df["Quantity"] = quantities.values()
 
-    results = aio.abc_analysis(
+    results = aioconnect.abc_analysis(
         df, primary_dimension="Product", numeric_dimension="Quantity"
     )
 

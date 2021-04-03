@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def abc_analysis(
+def one_function(
     df,
     primary_dimension,
     numeric_dimension,
