@@ -18,12 +18,12 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "aio"
-copyright = "2020, AIO"
+project = "aioconnect"
+copyright = "2021, AIO"
 author = "AIO"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.3"
+release = "0.0.1"
 
 
 # -- General configuration ---------------------------------------------------
