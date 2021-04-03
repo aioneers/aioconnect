@@ -17,7 +17,7 @@ long_description = "not yet working"
 
 setuptools.setup(
     name="aioconnect",
-    version="0.0.1",
+    version="0.0.2",
     author="AIO",
     author_email="maintainer@aioneers.com",
     license="MIT",
@@ -25,7 +25,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/aioneers/aioconnect",
-    download_url="https://github.com/aioneers/aioconnect/archive/0.0.1.tar.gz",
+    download_url="https://github.com/aioneers/aioconnect/archive/0.0.2.tar.gz",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
