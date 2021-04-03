@@ -30,14 +30,12 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.7",
     install_requires=[
         "pytest",
         "pydata_sphinx_theme",
         "nbsphinx",
         "numpydoc",
         "pandas",
-        "requests",
-        "logging",
     ],
 )
