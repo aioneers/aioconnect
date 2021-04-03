@@ -37,7 +37,5 @@ setuptools.setup(
         "nbsphinx",
         "numpydoc",
         "pandas",
-        "requests",
-        "logging",
     ],
 )
