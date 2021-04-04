@@ -7,8 +7,8 @@ AIO Connect
 List of Functions
 ~~~~~~~~~~~~~~~~~
 .. autosummary::
-   one_function
+   post_login
 
 Definition of Functions
 ~~~~~~~~~~~~~~~~~~~~~~~
-.. autofunction:: one_function
+.. autofunction:: post_login
