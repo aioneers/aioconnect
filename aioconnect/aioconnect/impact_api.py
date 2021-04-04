@@ -33,3 +33,24 @@ def post_login(
     response = requests.post(url, json=data)
     token = response.json()["data"]["token"]
     return token
+
+
+# TODO: rewrite with forms-datametricType, DOT_type is needed
+def post_create_DOT(
+    token: str,
+    DOT_name: str,
+    DOT_description: str,
+    DOT_baseline: float,
+    DOT_type: str = "6019fa2072b96c00133df326",
+):
+    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+    data = {
+        "name": DOT_name,
+        "description": DOT_description,
+        "type": DOT_type,
+        "baseline": DOT_baseline,
+        "metricType": "5fb7bf2f8ce87f0012fcc8f3",
+    }
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.post(url, json=data, headers=headers)
+    return response
