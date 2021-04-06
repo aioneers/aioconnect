@@ -1,5 +1,6 @@
 import aioconnect
 import aio_data_science_py as aio
+from datetime import datetime
 
 
 def test_post_login():
@@ -17,7 +18,6 @@ def test_post_login():
 
 
 def test_post_create_DOT():
-
     password = aio.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
@@ -33,6 +33,41 @@ def test_post_create_DOT():
         DOT_baseline=1234,
         DOT_type_id="6019fa2072b96c00133df326",
         METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
+    )
+
+    assert res.json()["message"] == "success"
+
+
+def test_update_DOT_wID_wo_timestamp():
+    password = aio.vault_get_secret(
+        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+    )
+
+    token = aioconnect.post_login(
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
+    )
+
+    res = aioconnect.update_DOT_wID(
+        token=token, DOT_id="606b54d1c8153d00193838bd", actuals=987
+    )
+
+    assert res.json()["message"] == "success"
+
+
+def test_update_DOT_wID_w_timestamp():
+    password = aio.vault_get_secret(
+        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+    )
+
+    token = aioconnect.post_login(
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
+    )
+
+    res = aioconnect.update_DOT_wID(
+        token=token,
+        DOT_id="606b54d1c8153d00193838bd",
+        actuals=987,
+        timestamp=datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
     )
 
     assert res.json()["message"] == "success"

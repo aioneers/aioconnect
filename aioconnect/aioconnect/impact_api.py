@@ -2,6 +2,7 @@ import requests
 from requests import Request, Session
 import io
 import pandas as pd
+from datetime import datetime
 
 # TODO rewrite with forms-data
 def post_login(
@@ -36,6 +37,66 @@ def post_login(
     response = requests.post(url, json=data)
     token = response.json()["data"]["token"]
     return token
+
+
+def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = None):
+    """
+    Function to create DOTs from a data frame and additional information.
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+    
+    DOT_id : str
+        ID of the DOT.
+
+    actuals : float
+        Most recent actuals value.
+
+    timestamp : str = None
+        Timestamp of the actual data in the format .
+
+    Returns
+    -------
+
+    response : response
+        Returns the HTTP response.
+
+    Examples
+    --------
+    >>> username, df_t = transform_qlik_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
+    >>> mytoken = post_login()
+    >>> res = post_create_bulk_DOT(
+    >>>     token = mytoken, 
+    >>>     dots_df = df_t,
+    >>>     DOT_type_id = "6019fa2072b96c00133df326",
+    >>>     METRIC_type_id = "5fb7bf2f8ce87f0012fcc8f3",
+    >>> )
+    """
+
+    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+
+    if timestamp is None:
+        datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    # Get actuals history
+    headers = {"Authorization": f"Bearer {token}"}
+    params = {"_id": {DOT_id}}
+    response = requests.get(url, headers=headers, params=params)
+    actuals_history = response.json()["data"]["payload"][0]["actuals"]
+
+    # Append actuals history with new value
+    new_actuals = {"timestamp": timestamp, "value": actuals}
+    actuals_history.append(new_actuals)
+
+    data = {
+        "_id": DOT_id,
+        "actuals": actuals_history,
+    }
+
+    response = requests.put(url, json=data, headers=headers)
+    return response
 
 
 # TODO: rewrite with forms-data
@@ -108,7 +169,6 @@ def post_create_bulk_DOT(
     DOT_type_id: str = "6019fa2072b96c00133df326",
     METRIC_type_id: str = "5fb7bf2f8ce87f0012fcc8f3",
 ):
-
     """
     Function to create DOTs from a data frame and additional information.
 
@@ -143,8 +203,6 @@ def post_create_bulk_DOT(
     >>>     METRIC_type_id = "5fb7bf2f8ce87f0012fcc8f3",
     >>> )
     """
-
-    DOT_names = ",".join(dots_df.DOT_name)
 
     dots_df = dots_df.rename(
         columns={

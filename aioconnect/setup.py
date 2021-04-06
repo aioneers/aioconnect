@@ -40,5 +40,6 @@ setuptools.setup(
         "numpydoc",
         "pandas",
         "requests",
+        "datetime",
     ],
 )
