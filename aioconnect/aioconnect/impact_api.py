@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 
 # TODO rewrite with forms-data
-def post_login(
+def get_token(
     email: str, password: str,
 ):
     """
@@ -27,7 +27,7 @@ def post_login(
 
     Examples
     --------
-    >>> aioconnect.post_login(
+    >>> aioconnect.get_token(
     >>>     email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
     """
@@ -39,9 +39,45 @@ def post_login(
     return token
 
 
+def delete_DOT_wID(token: str, DOT_id: str):
+    """
+    Function to delete a DOT.
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+    
+    DOT_id : str
+        ID of the DOT.
+
+    Returns
+    -------
+
+    response : response
+        Returns the HTTP response.
+
+    Examples
+    --------
+    >>> token = aioconnect.get_token(
+    >>> email="firstname.lastname@aioneers.com", password="xxx",
+    >>> )
+    >>> res = delete_DOT_wID(
+    >>>     token = token, 
+    >>>     DOT_id = "606b54d1c8153d00193838bd",
+    >>> )
+    """
+
+    url = "https://dev-api.aioneers.tech/v1/trackingObjects/" + DOT_id
+
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.delete(url, headers=headers)
+    return response
+
+
 def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = None):
     """
-    Function to create DOTs from a data frame and additional information.
+    Function to update a DOT and add the most recent actual value.
 
     Parameters
     ----------
@@ -65,20 +101,23 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
 
     Examples
     --------
-    >>> username, df_t = transform_qlik_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
-    >>> mytoken = post_login()
-    >>> res = post_create_bulk_DOT(
-    >>>     token = mytoken, 
-    >>>     dots_df = df_t,
-    >>>     DOT_type_id = "6019fa2072b96c00133df326",
-    >>>     METRIC_type_id = "5fb7bf2f8ce87f0012fcc8f3",
+    >>> from datetime import datetime
+    >>> 
+    >>> token = aioconnect.get_token(
+    >>> email="firstname.lastname@aioneers.com", password="xxx",
+    >>> )
+    >>> res = update_DOT_wID(
+    >>>     token = token, 
+    >>>     DOT_id = "606b54d1c8153d00193838bd",
+    >>>     actuals = 889,
+    >>>     timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
     >>> )
     """
 
-    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
-
     if timestamp is None:
         datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
 
     # Get actuals history
     headers = {"Authorization": f"Bearer {token}"}
@@ -136,7 +175,7 @@ def post_create_DOT(
 
     Examples
     --------
-    >>> token = aioconnect.post_login(
+    >>> token = aioconnect.get_token(
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
     >>> 
@@ -174,16 +213,16 @@ def post_create_bulk_DOT(
 
     Parameters
     ----------
-    token : string
+    token : str
         Token which was returned from the user login.
     
     dots_df : Pandas.DataFrame
         Dataframe which contains the information in the same format as it would be in the CSV upload.
     
-    DOT_type_id : string
+    DOT_type_id : str
         ID of the DOT type.
     
-    METRIC_type_id : string
+    METRIC_type_id : str
         ID of the METRIC type.
 
     Returns
@@ -195,7 +234,7 @@ def post_create_bulk_DOT(
     Examples
     --------
     >>> username, df_t = transform_qlik_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
-    >>> mytoken = post_login()
+    >>> mytoken = get_token()
     >>> res = post_create_bulk_DOT(
     >>>     token = mytoken, 
     >>>     dots_df = df_t,
