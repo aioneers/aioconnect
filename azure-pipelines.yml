@@ -41,7 +41,7 @@ steps:
 
   - script: |
       pip install pytest pytest-azurepipelines
-      pytest  --no-skips
+      pytest
     displayName: "Pytest. Everything. No skips allowed"
     env:
       SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
