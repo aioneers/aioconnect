@@ -15,21 +15,6 @@ def test_get_token():
     assert len(res) > 250
 
 
-# def test_delete_DOT_wID():
-#     password = aio.vault_get_secret(
-#         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-#     )
-
-#     token = aioconnect.get_token(
-#         email="sebastian.szilvas@aioneers.com", password=f"{password}",
-#     )
-
-#     res = aioconnect.delete_DOT_wID(token=token, DOT_id="606b54d1c8153d00193838bd",)
-
-#     # return res.text
-#     assert res.json()["message"] == "success"
-
-
 def test_delete_DOT_wID():
     password = aio.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
