@@ -7,8 +7,14 @@ AIO Connect
 List of Functions
 ~~~~~~~~~~~~~~~~~
 .. autosummary::
-   one_function
+   post_login
+   create_DOT
+   create_bulk_DOT
+   transform_qlik_string
 
 Definition of Functions
 ~~~~~~~~~~~~~~~~~~~~~~~
-.. autofunction:: one_function
+.. autofunction:: post_login
+.. autofunction:: create_DOT
+.. autofunction:: create_bulk_DOT
+.. autofunction:: transform_qlik_string
