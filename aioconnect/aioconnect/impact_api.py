@@ -142,8 +142,7 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
     return response
 
 
-# TODO: rewrite with forms-data
-def post_create_DOT(
+def create_DOT(
     token: str,
     DOT_name: str,
     DOT_description: str,
@@ -183,7 +182,7 @@ def post_create_DOT(
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
     >>> 
-    >>> res = aioconnect.post_create_DOT(
+    >>> res = aioconnect.create_DOT(
     >>>     token=token,
     >>>     DOT_name="TEST_DOT",
     >>>     DOT_description="TEST_DOT description",
@@ -206,7 +205,7 @@ def post_create_DOT(
     return response
 
 
-def post_create_bulk_DOT(
+def create_bulk_DOT(
     token: str,
     dots_df: pd.DataFrame,
     DOT_type_id: str = "6019fa2072b96c00133df326",
@@ -239,7 +238,7 @@ def post_create_bulk_DOT(
     --------
     >>> username, df_t = transform_qlik_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
     >>> mytoken = get_token()
-    >>> res = post_create_bulk_DOT(
+    >>> res = create_bulk_DOT(
     >>>     token = mytoken, 
     >>>     dots_df = df_t,
     >>>     DOT_type_id = "6019fa2072b96c00133df326",

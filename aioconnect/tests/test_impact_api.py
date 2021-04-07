@@ -29,7 +29,7 @@ def test_delete_DOT_wID():
     )
 
     # First create a DOT
-    tmp_res = aioconnect.post_create_DOT(
+    tmp_res = aioconnect.create_DOT(
         token=token,
         DOT_name="TEST_DOT",
         DOT_description="TEST_DOT description",
@@ -45,7 +45,7 @@ def test_delete_DOT_wID():
     assert res.json()["message"] == "success"
 
 
-def test_post_create_DOT():
+def test_create_DOT():
     password = aio.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
@@ -54,7 +54,7 @@ def test_post_create_DOT():
         email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
-    res = aioconnect.post_create_DOT(
+    res = aioconnect.create_DOT(
         token=token,
         DOT_name="TEST_DOT",
         DOT_description="TEST_DOT description",
@@ -76,7 +76,7 @@ def test_update_DOT_wID_wo_timestamp():
     )
 
     # First create a DOT
-    tmp_res = aioconnect.post_create_DOT(
+    tmp_res = aioconnect.create_DOT(
         token=token,
         DOT_name="TEST_DOT",
         DOT_description="TEST_DOT description",
@@ -105,7 +105,7 @@ def test_update_DOT_wID_w_timestamp():
     )
 
     # First create a DOT
-    tmp_res = aioconnect.post_create_DOT(
+    tmp_res = aioconnect.create_DOT(
         token=token,
         DOT_name="TEST_DOT",
         DOT_description="TEST_DOT description",
@@ -125,7 +125,7 @@ def test_update_DOT_wID_w_timestamp():
     assert res.json()["message"] == "success"
 
 
-def test_post_create_bulk_DOT_wDOT_type_wMETRIC_type():
+def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
     username, df_t = aioconnect.transform_qlik_string(
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
@@ -138,7 +138,7 @@ def test_post_create_bulk_DOT_wDOT_type_wMETRIC_type():
         email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
-    res = aioconnect.post_create_bulk_DOT(
+    res = aioconnect.create_bulk_DOT(
         token=mytoken,
         dots_df=df_t,
         DOT_type_id="6019fa2072b96c00133df326",
@@ -148,7 +148,7 @@ def test_post_create_bulk_DOT_wDOT_type_wMETRIC_type():
     assert res.json()["message"] == "success"
 
 
-def test_post_create_bulk_DOT_woDOT_type_woMETRIC_type():
+def test_create_bulk_DOT_woDOT_type_woMETRIC_type():
     username, df_t = aioconnect.transform_qlik_string(
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
@@ -161,6 +161,6 @@ def test_post_create_bulk_DOT_woDOT_type_woMETRIC_type():
         email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
-    res = aioconnect.post_create_bulk_DOT(token=mytoken, dots_df=df_t,)
+    res = aioconnect.create_bulk_DOT(token=mytoken, dots_df=df_t,)
 
     assert res.json()["message"] == "success"
