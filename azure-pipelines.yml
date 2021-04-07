@@ -3,6 +3,14 @@
 # Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+        - dev
+    always: true
+
 trigger:
   - dev
 
@@ -28,3 +36,19 @@ steps:
       pip install pytest pytest-azurepipelines
       pytest
     displayName: "pytest"
+
+steps:
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: "aioneersMainSubscription(603f9c05-0a2a-4daa-914d-8242a3a4beb8)"
+      KeyVaultName: "aio-data-science-key"
+      SecretsFilter: "*"
+      RunAsPreJob: false
+
+  - script: |
+      pip install pytest pytest-azurepipelines
+      pytest  --no-skips
+    displayName: "Pytest. Everything. No skips allowed"
+    env:
+      SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
+      displayName: "Set tokens as environment tokens"
