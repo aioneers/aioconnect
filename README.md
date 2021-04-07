@@ -25,15 +25,19 @@ with the end goal of accelerating our community’s efforts to build a more sus
 <br>
 The documentation can be found here: [![Documentation Status](https://readthedocs.org/projects/aioconnect/badge/?version=latest)](https://aioconnect.readthedocs.io/en/latest/?badge=latest)
 
-# Install
+# Installation
 
-## Clone the repository
+## Usage of the package
 
-Install the repository with PyPI.
+Install the package with PyPI.
 
 ```
 $ pip install aioconnect
 ```
+
+## Clone the repository for users with direct access
+
+git clone -b dev https://<<GITUSERNAME>>:<<PERSONALACCESSTOKEN>>@github.com/aioneers/aioconnect.git
 
 # Contribution guidelines
 
