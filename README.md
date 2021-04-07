@@ -39,6 +39,12 @@ $ pip install aioconnect
 
 git clone -b dev https://<<GITUSERNAME>>:<<PERSONALACCESSTOKEN>>@github.com/aioneers/aioconnect.git
 
+Install the package locally:
+
+```
+$ pip install -e ./aioconnect
+```
+
 # Contribution guidelines
 
 First of all, thank you for considering contributing to this repository. Any contribution, from correcting a typo, forking the repo to adding another function or an insightful tutorial is very welcome.
