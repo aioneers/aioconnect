@@ -34,6 +34,7 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
     install_requires=[
+        "aio@git+https://github.com/aioneers/aio.git#subdirectory=aio",
         "pytest",
         "pydata_sphinx_theme",
         "nbsphinx",
@@ -41,5 +42,7 @@ setuptools.setup(
         "pandas",
         "requests",
         "datetime",
+        "azure-keyvault",
+        "azure-identity",
     ],
 )

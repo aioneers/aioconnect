@@ -1,5 +1,9 @@
 import aioconnect
-import aio_data_science_py as aio
+import aio
+
+
+from azure.keyvault.secrets import SecretClient
+from azure.identity import AzureCliCredential
 
 
 def test_get_token():

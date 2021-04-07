@@ -4,7 +4,7 @@ import io
 import pandas as pd
 from datetime import datetime
 
-# TODO rewrite with forms-data
+
 def get_token(
     email: str, password: str,
 ):
@@ -33,9 +33,13 @@ def get_token(
     """
 
     url = "https://dev-api.aioneers.tech/v1/login"
-    data = {"email": f"{email}", "password": f"{password}"}
-    response = requests.post(url, json=data)
+
+    payload = {"email": email, "password": password}
+
+    response = requests.post(url=url, data=payload)
+
     token = response.json()["data"]["token"]
+
     return token
 
 

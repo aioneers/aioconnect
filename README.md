@@ -45,6 +45,32 @@ Install the package locally:
 $ pip install -e ./aioconnect
 ```
 
+## Install and configure Azure CLI
+
+For a lot of our functions we use the Azure CLI repository.
+
+To install the current release, Azure CLI is necessary as a prerequisite: [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+On Windows, the installation guide can be found here: [Windows az CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
+
+On macOS the Azure CLI can be installed with Homebrew on a command line: [macOS az CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos)
+
+```
+$ brew update && brew install azure-cli
+```
+
+On Linux, the Azure CLI can be installed via apt: [Linux az CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux)
+
+```
+$ curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+```
+
+Then the Azure CLI needs to be signed, which is easiest with this command (for all systems):
+
+```
+$ az login
+```
+
 # Contribution guidelines
 
 First of all, thank you for considering contributing to this repository. Any contribution, from correcting a typo, forking the repo to adding another function or an insightful tutorial is very welcome.
