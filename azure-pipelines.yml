@@ -32,12 +32,6 @@ steps:
       pip install -e ./aioconnect/
     displayName: "Install library with dependencies"
 
-  - script: |
-      pip install pytest pytest-azurepipelines
-      pytest
-    displayName: "pytest"
-
-steps:
   - task: AzureKeyVault@1
     inputs:
       azureSubscription: "aioneersMainSubscription(603f9c05-0a2a-4daa-914d-8242a3a4beb8)"
