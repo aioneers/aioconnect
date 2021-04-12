@@ -1,0 +1,28 @@
+trigger:
+  - main
+
+pool:
+  vmImage: "ubuntu-latest"
+strategy:
+  matrix:
+    Python37:
+      python.version: "3.7"
+
+steps:
+  - script: |
+      pip install wheel
+      pip install twine
+    displayName: "Install library with dependencies"
+
+  - script: |
+      python ./aioconnect/setup.py bdist_wheel
+    displayName: "Artifact creation"
+
+  - task: TwineAuthenticate@1
+    displayName: "Twine Authenticate"
+    inputs:
+      pythonUploadServiceConnection: "PyPI_aioconnect"
+
+  - script: |
+      python -m twine upload --skip-existing --verbose --repository "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
+    displayName: "Publish to PyPi through Twine"
