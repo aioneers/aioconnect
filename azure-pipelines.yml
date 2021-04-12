@@ -22,7 +22,6 @@ strategy:
       python.version: "3.7"
 
 steps:
-
   - script: |
       pip install wheel
       pip install twine
@@ -30,13 +29,16 @@ steps:
 
   - script: |
       python ./aioconnect/setup.py bdist_wheel
+    displayName: "Artifact creation"
 
   - task: TwineAuthenticate@1
-    displayName: 'Twine Authenticate'
+    displayName: "Twine Authenticate"
     inputs:
       pythonUploadServiceConnection: "PyPI_aioconnect"
+
   - script: |
-      python -m twine upload -r "PyPI_aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
+      python -m twine upload --skip-existing --verbose --repository "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
+    displayName: "Publish to PyPi through Twine"
 
   - task: UsePythonVersion@0
     inputs:
