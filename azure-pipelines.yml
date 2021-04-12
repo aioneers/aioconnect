@@ -1,8 +1,3 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 schedules:
   - cron: "0 0 * * *"
     displayName: Daily midnight build
@@ -22,24 +17,6 @@ strategy:
       python.version: "3.7"
 
 steps:
-  - script: |
-      pip install wheel
-      pip install twine
-    displayName: "Install library with dependencies"
-
-  - script: |
-      python ./aioconnect/setup.py bdist_wheel
-    displayName: "Artifact creation"
-
-  - task: TwineAuthenticate@1
-    displayName: "Twine Authenticate"
-    inputs:
-      pythonUploadServiceConnection: "PyPI_aioconnect"
-
-  - script: |
-      python -m twine upload --skip-existing --verbose --repository "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
-    displayName: "Publish to PyPi through Twine"
-
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "$(python.version)"
