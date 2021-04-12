@@ -24,6 +24,13 @@ strategy:
       python.version: "3.8"
 
 steps:
+  - script: |
+      pip install twine
+    displayName: "Pip install twine"
+    env:
+      SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
+      displayName: "Set tokens as environment tokens"
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "$(python.version)"
