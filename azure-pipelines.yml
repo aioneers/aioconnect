@@ -20,12 +20,14 @@ strategy:
   matrix:
     Python37:
       python.version: "3.7"
-    Python38:
-      python.version: "3.8"
 
 steps:
 
-  # Build the python distribution from source
+  - script: |
+      pip install wheel
+      pip install twine
+    displayName: "Install library with dependencies"
+
   - script: |
       python ./aioconnect/setup.py bdist_wheel
 
