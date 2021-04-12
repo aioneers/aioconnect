@@ -31,6 +31,12 @@ steps:
       SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
       displayName: "Set tokens as environment tokens"
 
+  - task: TwineAuthenticate@1
+  inputs:
+    externalFeeds: "PyPI"
+
+  - script: 'twine upload -r {PyPI/aioconnect} --config-file $(PYPIRC_PATH) {aioconnect}'
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "$(python.version)"
