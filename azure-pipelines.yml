@@ -24,18 +24,17 @@ strategy:
       python.version: "3.8"
 
 steps:
+
+  # Build the python distribution from source
   - script: |
-      pip install twine
-    displayName: "Pip install twine"
-    env:
-      SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
-      displayName: "Set tokens as environment tokens"
+      python ./aioconnect/setup.py bdist_wheel
 
   - task: TwineAuthenticate@1
+    displayName: 'Twine Authenticate'
     inputs:
-      externalFeeds: "PyPI"
-
-  - script: "twine upload -r {PyPI/aioconnect} --config-file $(PYPIRC_PATH) {aioconnect}"
+      pythonUploadServiceConnection: "PyPI"
+  - script: |
+      python -m twine upload -r "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
 
   - task: UsePythonVersion@0
     inputs:
