@@ -36,7 +36,7 @@ steps:
     inputs:
       pythonUploadServiceConnection: "PyPI_aioconnect"
   - script: |
-      python -m twine upload -r "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
+      python -m twine upload -r "PyPI_aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
 
   - task: UsePythonVersion@0
     inputs:
