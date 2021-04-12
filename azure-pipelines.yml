@@ -32,10 +32,10 @@ steps:
       displayName: "Set tokens as environment tokens"
 
   - task: TwineAuthenticate@1
-  inputs:
-    externalFeeds: "PyPI"
+    inputs:
+      externalFeeds: "PyPI"
 
-  - script: 'twine upload -r {PyPI/aioconnect} --config-file $(PYPIRC_PATH) {aioconnect}'
+  - script: "twine upload -r {PyPI/aioconnect} --config-file $(PYPIRC_PATH) {aioconnect}"
 
   - task: UsePythonVersion@0
     inputs:
