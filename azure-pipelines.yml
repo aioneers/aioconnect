@@ -34,7 +34,7 @@ steps:
   - task: TwineAuthenticate@1
     displayName: 'Twine Authenticate'
     inputs:
-      pythonUploadServiceConnection: "PyPI"
+      pythonUploadServiceConnection: "PyPI_aioconnect"
   - script: |
       python -m twine upload -r "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
 
