@@ -34,7 +34,7 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
     install_requires=[
-        "aio@git+https://github.com/aioneers/aio.git#subdirectory=aio",
+        # "aiox",
         "pytest",
         "pydata_sphinx_theme",
         "nbsphinx",

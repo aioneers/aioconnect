@@ -1,5 +1,5 @@
 import aioconnect
-import aio
+import aiox
 
 
 from azure.keyvault.secrets import SecretClient
@@ -7,7 +7,7 @@ from azure.identity import AzureCliCredential
 
 
 def test_get_token():
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -20,7 +20,7 @@ def test_get_token():
 
 
 def test_delete_DOT_wID():
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -46,7 +46,7 @@ def test_delete_DOT_wID():
 
 
 def test_create_DOT():
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -67,7 +67,7 @@ def test_create_DOT():
 
 
 def test_update_DOT_wID_wo_timestamp():
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -96,7 +96,7 @@ def test_update_DOT_wID_wo_timestamp():
 def test_update_DOT_wID_w_timestamp():
     from datetime import datetime
 
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -130,7 +130,7 @@ def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
 
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -153,7 +153,7 @@ def test_create_bulk_DOT_woDOT_type_woMETRIC_type():
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
 
-    password = aio.vault_get_secret(
+    password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 

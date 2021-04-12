@@ -4,7 +4,7 @@
 **/*.egg-info/**
 *.key
 
-aio_data_science_py/doc/build/
+./aioconnect/doc/build/
 
 .vscode/*
 *.code-workspace
