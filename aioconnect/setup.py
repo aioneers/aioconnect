@@ -44,5 +44,6 @@ setuptools.setup(
         "datetime",
         "azure-keyvault",
         "azure-identity",
+        "json",
     ],
 )

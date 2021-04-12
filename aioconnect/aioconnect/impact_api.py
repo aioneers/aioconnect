@@ -3,6 +3,7 @@ from requests import Request, Session
 import io
 import pandas as pd
 from datetime import datetime
+import json
 
 
 def get_token(
@@ -193,15 +194,25 @@ def create_DOT(
     """
 
     url = "https://dev-api.aioneers.tech/v1/trackingObjects"
-    data = {
-        "name": DOT_name,
-        "description": DOT_description,
-        "type": DOT_type_id,
-        "baseline": DOT_baseline,
-        "metricType": METRIC_type_id,
+
+    payload = json.dumps(
+        {
+            "name": DOT_name,
+            "description": DOT_description,
+            "type": DOT_type_id,
+            "baseline": DOT_baseline,
+            "metricType": {"_id": METRIC_type_id},
+        }
+    )
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
     }
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.post(url, json=data, headers=headers)
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    print(response.text)
+
     return response
 
 
