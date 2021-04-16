@@ -6,6 +6,46 @@ from datetime import datetime
 import json
 
 
+def _get_initiative_templates(token: str):
+    """
+    Get the initiative templates
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+    
+    Returns
+    -------
+
+    res_message : str
+        Message of the HTTP response.
+
+    res_data : list
+        Initiative templates as list.
+
+    Examples
+    --------
+    >>> token = aioconnect.get_token(
+    >>> email="firstname.lastname@aioneers.com", password="xxx",
+    >>> )
+    >>> res_message, res_data = aioconnect._get_initiative_templates(
+    >>>     token = token, 
+    >>> )
+    """
+
+    url = "https://dev-api.aioneers.tech/v1/templates"
+    url = url.rstrip("/")
+
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(url=url, headers=headers,)
+
+    res_message = response.json()["message"]
+    res_data = response.json()["data"]["initiativeTemplates"]
+
+    return res_message, res_data
+
+
 def get_token(
     email: str, password: str,
 ):
@@ -34,6 +74,7 @@ def get_token(
     """
 
     url = "https://dev-api.aioneers.tech/v1/login"
+    url = url.rstrip("/")
 
     payload = {"email": email, "password": password}
 
@@ -73,10 +114,12 @@ def delete_DOT_wID(token: str, DOT_id: str):
     >>> )
     """
 
-    url = "https://dev-api.aioneers.tech/v1/trackingObjects/" + DOT_id
+    url = "https://dev-api.aioneers.tech/v1/trackingObjects/"
+    url = url.rstrip("/")
+    url += "/" + DOT_id
 
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.delete(url, headers=headers)
+    response = requests.delete(url=url, headers=headers)
     return response
 
 
@@ -123,6 +166,7 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
         datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
     url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+    url = url.rstrip("/")
 
     # Get actuals history
     headers = {"Authorization": f"Bearer {token}"}
@@ -139,7 +183,7 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
         "actuals": actuals_history,
     }
 
-    response = requests.put(url, json=data, headers=headers)
+    response = requests.put(url=url, json=data, headers=headers)
     return response
 
 
@@ -194,6 +238,7 @@ def create_DOT(
     """
 
     url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+    url = url.rstrip("/")
 
     payload = json.dumps(
         {
@@ -209,7 +254,7 @@ def create_DOT(
         "Content-Type": "application/json",
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.post(url=url, headers=headers, data=payload)
 
     print(response.text)
 
@@ -266,6 +311,8 @@ def create_bulk_DOT(
     )
 
     url = "https://dev-api.aioneers.tech/v1/trackingObjects/upload"
+    url = url.rstrip("/")
+
     headers = {"Authorization": f"Bearer {token}"}
 
     with io.StringIO(dots_df.to_csv(index=False)) as openstream:
@@ -285,6 +332,7 @@ def create_bulk_DOT(
     return response
 
 
+# To be deprecated
 def transform_qlik_string(arg_string: str):
     """
     Transform the string input from Qlik Sense and extract the relevant information.

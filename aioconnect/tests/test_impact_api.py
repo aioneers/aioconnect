@@ -1,9 +1,27 @@
+import json
 import aioconnect
 import aiox
 
 
 from azure.keyvault.secrets import SecretClient
 from azure.identity import AzureCliCredential
+
+
+def test_get_initiative_templates():
+    password = aiox.vault_get_secret(
+        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+    )
+
+    token = aioconnect.get_token(
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
+    )
+
+    res_message, res_data = aioconnect._get_initiative_templates(token=token,)
+
+    print(res_message)
+
+    assert res_message == "success"
+    assert isinstance(res_data, list)
 
 
 def test_get_token():

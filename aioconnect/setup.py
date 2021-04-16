@@ -34,6 +34,7 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
     install_requires=[
+        "aiox",
         "pytest",
         "pydata_sphinx_theme",
         "nbsphinx",
