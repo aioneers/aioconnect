@@ -6,6 +6,97 @@ from datetime import datetime
 import json
 
 
+def create_or_update_DOT_wName_wDescription(
+    token: str,
+    DOT_name: str,
+    DOT_baseline: float,
+    DOT_description: str = None,
+    DOT_type_id: str = "6019fa2072b96c00133df326",
+    METRIC_type_id: str = "5fb7bf2f8ce87f0012fcc8f3",
+):
+    """
+    Create a new DOT in AIO Impact or update it if the DOT is already existing.
+
+    Parameters
+    ----------
+    DOT_name : str
+        Name of the DOT.
+
+    DOT_baseline : float
+        Baseline value of the DOT.
+    
+    DOT_description : str = DOT_name
+        Description of the DOT.
+
+    DOT_type_id : str = "6019fa2072b96c00133df326"
+        ID of the DOT type.
+
+    METRIC_type_id : str = "5fb7bf2f8ce87f0012fcc8f3"
+        ID of the METRIC type.
+
+    Returns
+    -------
+
+    response : response
+        HTTP response.
+
+    Examples
+    --------
+    >>> token = aioconnect.get_token(
+    >>> email="firstname.lastname@aioneers.com", password="xxx",
+    >>> )
+    >>> 
+    >>> res = aioconnect.create_or_update_DOT_wName_wDescription(
+    >>>     token=token,
+    >>>     DOT_name="TEST_DOT",
+    >>>     DOT_description="TEST_DOT description",
+    >>>     DOT_baseline=1234,
+    >>>     DOT_type_id="6019fa2072b96c00133df326",
+    >>>     METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
+    >>> )
+    """
+
+    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+    url = url.rstrip("/")
+    url += "?name=" + DOT_name
+
+    if DOT_description == None:
+        DOT_description = DOT_name
+    else:
+        url += "&description=" + DOT_description
+
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(url=url, headers=headers,)
+    response.raise_for_status()
+
+    total = response.json()["data"]["total"]
+    # print("total: ", total)
+
+    if total == 0:
+        res = create_DOT(
+            token=token,
+            DOT_name=DOT_name,
+            DOT_baseline=DOT_baseline,
+            DOT_description=DOT_description,
+            DOT_type_id=DOT_type_id,
+            METRIC_type_id=METRIC_type_id,
+        )
+    elif total == 1:
+        DOT_id = response.json()["data"]["payload"][0]["_id"]
+        res = update_DOT_wID(
+            token=token, DOT_id=DOT_id, actuals=DOT_baseline, timestamp=None
+        )
+    else:
+        # Update every DOT with that DOT_name
+        for i in range(total):
+            DOT_id = response.json()["data"]["payload"][i]["_id"]
+            res = update_DOT_wID(
+                token=token, DOT_id=DOT_id, actuals=DOT_baseline, timestamp=None
+            )
+
+    return res
+
+
 def _get_initiative_templates(token: str):
     """
     Get the initiative templates
@@ -18,10 +109,7 @@ def _get_initiative_templates(token: str):
     Returns
     -------
 
-    res_message : str
-        Message of the HTTP response.
-
-    res_data : list
+    res : list
         Initiative templates as list.
 
     Examples
@@ -29,21 +117,21 @@ def _get_initiative_templates(token: str):
     >>> token = aioconnect.get_token(
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
-    >>> res_message, res_data = aioconnect._get_initiative_templates(
+    >>> res = aioconnect._get_initiative_templates(
     >>>     token = token, 
     >>> )
     """
 
-    url = "https://dev-api.aioneers.tech/v1/templates"
+    url = "https://dev-api.aioneers.tech/v1/initiativeTemplates"
     url = url.rstrip("/")
 
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.get(url=url, headers=headers,)
+    response.raise_for_status()
 
-    res_message = response.json()["message"]
-    res_data = response.json()["data"]["initiativeTemplates"]
+    res = response.json()["data"]["payload"]
 
-    return res_message, res_data
+    return res
 
 
 def get_token(
@@ -54,16 +142,16 @@ def get_token(
 
     Parameters
     ----------
-    email : string
+    email : str
         Email address of the user account.
     
-    password : string
+    password : str
         Password of the user account.
 
     Returns
     -------
 
-    token : string
+    token : str
         Bearer token.
 
     Examples
@@ -79,6 +167,7 @@ def get_token(
     payload = {"email": email, "password": password}
 
     response = requests.post(url=url, data=payload)
+    response.raise_for_status()
 
     token = response.json()["data"]["token"]
 
@@ -120,6 +209,8 @@ def delete_DOT_wID(token: str, DOT_id: str):
 
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.delete(url=url, headers=headers)
+    response.raise_for_status()
+
     return response
 
 
@@ -172,6 +263,8 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
     headers = {"Authorization": f"Bearer {token}"}
     params = {"_id": {DOT_id}}
     response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+
     actuals_history = response.json()["data"]["payload"][0]["actuals"]
 
     # Append actuals history with new value
@@ -190,8 +283,8 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
 def create_DOT(
     token: str,
     DOT_name: str,
-    DOT_description: str,
     DOT_baseline: float,
+    DOT_description: str = None,
     DOT_type_id: str = "6019fa2072b96c00133df326",
     METRIC_type_id: str = "5fb7bf2f8ce87f0012fcc8f3",
 ):
@@ -200,19 +293,19 @@ def create_DOT(
 
     Parameters
     ----------
-    DOT_name : string
+    DOT_name : str
         Name of the DOT.
-    
-    DOT_description : string
-        Description of the DOT.
 
     DOT_baseline : float
         Baseline value of the DOT.
+    
+    DOT_description : str = DOT_name
+        Description of the DOT.
 
-    DOT_type_id : string
+    DOT_type_id : str = "6019fa2072b96c00133df326"
         ID of the DOT type.
 
-    METRIC_type_id : string
+    METRIC_type_id : str = "5fb7bf2f8ce87f0012fcc8f3"
         ID of the METRIC type.
 
     Returns
@@ -237,6 +330,9 @@ def create_DOT(
     >>> )
     """
 
+    if DOT_description == None:
+        DOT_description = DOT_name
+
     url = "https://dev-api.aioneers.tech/v1/trackingObjects"
     url = url.rstrip("/")
 
@@ -255,8 +351,7 @@ def create_DOT(
     }
 
     response = requests.post(url=url, headers=headers, data=payload)
-
-    print(response.text)
+    response.raise_for_status()
 
     return response
 
@@ -329,6 +424,8 @@ def create_bulk_DOT(
 
     s = Session()
     response = s.send(request)
+    response.raise_for_status()
+
     return response
 
 
@@ -339,13 +436,13 @@ def transform_qlik_string(arg_string: str):
 
     Parameters
     ----------
-    arg_string : string
+    arg_string : str
         Input string sent from Qlik Sense.
 
     Returns
     -------
 
-    username : string
+    username : str
         The username, extracted from the string.
 
     df_t : Pandas.DataFrame
