@@ -4,6 +4,47 @@ import io
 import pandas as pd
 from datetime import datetime
 import json
+import aioconnect
+
+
+def get_metric_type_id_wMetricName(token: str, metric_name: str):
+    """
+    Create a new DOT in AIO Impact or update it if the DOT is already existing.
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+
+    metric_name : str
+        Name of the metric type. Current options are "Financial", "Percentage", "Countable", "Other", "My second DOT"
+
+    Returns
+    -------
+
+    _id : str
+        ID of the metric type.
+
+
+    """
+    url = "https://dev-api.aioneers.tech/v1/metrictypes"
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
+
+    response_json = response.json()["data"]["payload"]
+
+    all_metric_names = aioconnect.json_extract(response_json, "name")
+
+    index_of_metric = all_metric_names.index(metric_name)
+
+    _id = response.json()["data"]["payload"][index_of_metric]["_id"]
+
+    return _id
 
 
 def create_or_update_DOT_wName_wDescription(
@@ -19,12 +60,15 @@ def create_or_update_DOT_wName_wDescription(
 
     Parameters
     ----------
+    token : str
+        Token which was returned from the user login.
+
     DOT_name : str
         Name of the DOT.
 
     DOT_baseline : float
         Baseline value of the DOT.
-    
+
     DOT_description : str = DOT_name
         Description of the DOT.
 
@@ -45,7 +89,7 @@ def create_or_update_DOT_wName_wDescription(
     >>> token = aioconnect.get_token(
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
-    >>> 
+    >>>
     >>> res = aioconnect.create_or_update_DOT_wName_wDescription(
     >>>     token=token,
     >>>     DOT_name="TEST_DOT",
@@ -66,7 +110,10 @@ def create_or_update_DOT_wName_wDescription(
         url += "&description=" + DOT_description
 
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url=url, headers=headers,)
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
     response.raise_for_status()
 
     total = response.json()["data"]["total"]
@@ -105,7 +152,7 @@ def _get_initiative_templates(token: str):
     ----------
     token : str
         Token which was returned from the user login.
-    
+
     Returns
     -------
 
@@ -118,7 +165,7 @@ def _get_initiative_templates(token: str):
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
     >>> res = aioconnect._get_initiative_templates(
-    >>>     token = token, 
+    >>>     token = token,
     >>> )
     """
 
@@ -126,7 +173,10 @@ def _get_initiative_templates(token: str):
     url = url.rstrip("/")
 
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url=url, headers=headers,)
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
     response.raise_for_status()
 
     res = response.json()["data"]["payload"]
@@ -135,7 +185,8 @@ def _get_initiative_templates(token: str):
 
 
 def get_token(
-    email: str, password: str,
+    email: str,
+    password: str,
 ):
     """
     Log into AIO Impact and get a token.
@@ -144,7 +195,7 @@ def get_token(
     ----------
     email : str
         Email address of the user account.
-    
+
     password : str
         Password of the user account.
 
@@ -182,7 +233,7 @@ def delete_DOT_wID(token: str, DOT_id: str):
     ----------
     token : str
         Token which was returned from the user login.
-    
+
     DOT_id : str
         ID of the DOT.
 
@@ -198,7 +249,7 @@ def delete_DOT_wID(token: str, DOT_id: str):
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
     >>> res = delete_DOT_wID(
-    >>>     token = token, 
+    >>>     token = token,
     >>>     DOT_id = "606b54d1c8153d00193838bd",
     >>> )
     """
@@ -222,7 +273,7 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
     ----------
     token : str
         Token which was returned from the user login.
-    
+
     DOT_id : str
         ID of the DOT.
 
@@ -241,12 +292,12 @@ def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = Non
     Examples
     --------
     >>> from datetime import datetime
-    >>> 
+    >>>
     >>> token = aioconnect.get_token(
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
     >>> res = update_DOT_wID(
-    >>>     token = token, 
+    >>>     token = token,
     >>>     DOT_id = "606b54d1c8153d00193838bd",
     >>>     actuals = 889,
     >>>     timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
@@ -298,7 +349,7 @@ def create_DOT(
 
     DOT_baseline : float
         Baseline value of the DOT.
-    
+
     DOT_description : str = DOT_name
         Description of the DOT.
 
@@ -319,7 +370,7 @@ def create_DOT(
     >>> token = aioconnect.get_token(
     >>> email="firstname.lastname@aioneers.com", password="xxx",
     >>> )
-    >>> 
+    >>>
     >>> res = aioconnect.create_DOT(
     >>>     token=token,
     >>>     DOT_name="TEST_DOT",
@@ -369,13 +420,13 @@ def create_bulk_DOT(
     ----------
     token : str
         Token which was returned from the user login.
-    
+
     dots_df : Pandas.DataFrame
         Dataframe which contains the information in the same format as it would be in the CSV upload.
-    
+
     DOT_type_id : str
         ID of the DOT type.
-    
+
     METRIC_type_id : str
         ID of the METRIC type.
 
@@ -390,7 +441,7 @@ def create_bulk_DOT(
     >>> username, df_t = transform_qlik_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
     >>> mytoken = get_token()
     >>> res = create_bulk_DOT(
-    >>>     token = mytoken, 
+    >>>     token = mytoken,
     >>>     dots_df = df_t,
     >>>     DOT_type_id = "6019fa2072b96c00133df326",
     >>>     METRIC_type_id = "5fb7bf2f8ce87f0012fcc8f3",
@@ -456,7 +507,10 @@ def transform_qlik_string(arg_string: str):
 
     df = pd.DataFrame(data=arg_string.split(";"))
 
-    df = df[0].str.split(pat="=", expand=True,)
+    df = df[0].str.split(
+        pat="=",
+        expand=True,
+    )
     df.columns = ["Field", "Value"]
 
     username = df[df["Field"] == " UserId"].Value
