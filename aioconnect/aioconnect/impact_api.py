@@ -1,42 +1,39 @@
 import requests
 from requests import Request, Session
+from requests import request
+
 import io
 import pandas as pd
 from datetime import datetime
 import json
-import aioconnect
+from aioconnect.helpers import *
 
 
-def get_Metric_types(token: str):
-    """
-    Get all available Metric types
+def get_Metric_types(
+    token: str,
+    url: str = "https://dev-api.aioneers.tech/v1/metrictypes",
+) -> list:
+    """get_Metric_types [summary]
 
     Parameters
     ----------
     token : str
-        Token which was returned from the user login.
+        [description]
+    url : str, optional
+        [description], by default "https://dev-api.aioneers.tech/v1/metrictypes"
 
     Returns
     -------
-
-    res : list
-        List of all available metric types.
-
+    list
+        [description]
     """
-    url = "https://dev-api.aioneers.tech/v1/metrictypes"
-
-    headers = {"Authorization": f"Bearer {token}"}
-
-    response = requests.get(
+    response = request(
+        method="GET",
         url=url,
-        headers=headers,
+        headers={"Authorization": f"Bearer {token}"},
     )
 
-    response_json = response.json()["data"]["payload"]
-
-    res = aioconnect.json_extract(response_json, "name")
-
-    return res
+    return json_extract(response.json()["data"]["payload"], "name")
 
 
 def get_DOT_types(token: str):
