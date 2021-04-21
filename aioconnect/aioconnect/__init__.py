@@ -4,7 +4,10 @@ from .impact_api import update_DOT_wID
 from .impact_api import create_DOT
 from .impact_api import create_bulk_DOT
 from .impact_api import create_or_update_DOT_wName_wDescription
-from .impact_api import get_metric_type_id_wMetricName
+from .impact_api import get_metric_type_id_wMetric_type_name
+from .impact_api import get_DOT_type_id_wDOT_type_name
+from .impact_api import get_DOT_types
+from .impact_api import get_Metric_types
 
 from .helpers import json_extract
 

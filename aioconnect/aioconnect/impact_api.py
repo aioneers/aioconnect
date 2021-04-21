@@ -7,24 +7,20 @@ import json
 import aioconnect
 
 
-def get_metric_type_id_wMetricName(token: str, metric_name: str):
+def get_Metric_types(token: str):
     """
-    Create a new DOT in AIO Impact or update it if the DOT is already existing.
+    Get all available Metric types
 
     Parameters
     ----------
     token : str
         Token which was returned from the user login.
 
-    metric_name : str
-        Name of the metric type. Current options are "Financial", "Percentage", "Countable", "Other", "My second DOT"
-
     Returns
     -------
 
-    _id : str
-        ID of the metric type.
-
+    res : list
+        List of all available metric types.
 
     """
     url = "https://dev-api.aioneers.tech/v1/metrictypes"
@@ -38,9 +34,117 @@ def get_metric_type_id_wMetricName(token: str, metric_name: str):
 
     response_json = response.json()["data"]["payload"]
 
-    all_metric_names = aioconnect.json_extract(response_json, "name")
+    res = aioconnect.json_extract(response_json, "name")
 
-    index_of_metric = all_metric_names.index(metric_name)
+    return res
+
+
+def get_DOT_types(token: str):
+    """
+    Get all available DOT types
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+
+    Returns
+    -------
+
+    res : list
+        List of all available DOT types.
+
+    """
+    url = "https://dev-api.aioneers.tech/v1/trackingObjectTypes"
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
+
+    response_json = response.json()["data"]["payload"]
+
+    res = aioconnect.json_extract(response_json, "name")
+
+    return res
+
+
+def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
+    """
+    Get the id of the DOT type given the DOT type name
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+
+    DOT_type_name : str
+        Name of the DOT type. Current options are:
+        'Material', 'Master Data Object', 'Master Data Process', 'Asset', 'Line', 'Production Department', 'Customer Invoice', 'Supplier Invoice', 'Supplier', 'Customer', 'Process', 'Plant', 'IT System', 'Supplier Segment', 'Cost Center', 'Warehouse', 'Lane', 'Destination', 'Project', 'Product Group', 'Product Segment', 'Customer Segment', 'Standard', 'Data Object', 'Capacity Resource', 'Business Partner', 'Organizational Unit', 'Account', 'Location', 'Relation', 'Document Type'
+
+    Returns
+    -------
+
+    _id : str
+        ID of the metric type.
+
+    """
+
+    url = "https://dev-api.aioneers.tech/v1/trackingObjectTypes"
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
+
+    response_json = response.json()["data"]["payload"]
+
+    all_DOT_type_names = aioconnect.get_DOT_types(token=token)
+
+    index_of_DOT_type = all_DOT_type_names.index(DOT_type_name)
+
+    _id = response_json[index_of_DOT_type]["_id"]
+
+    return _id
+
+
+def get_metric_type_id_wMetric_type_name(token: str, metric_type_name: str):
+    """
+    Get the id of the metric type given the metric type name
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+
+    metric_type_name : str
+        Name of the metric type. Current options are "Financial", "Percentage", "Countable", "Other", "My second DOT"
+
+    Returns
+    -------
+
+    _id : str
+        ID of the metric type.
+
+    """
+    url = "https://dev-api.aioneers.tech/v1/metrictypes"
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
+
+    response_json = response.json()["data"]["payload"]
+
+    all_metric_type_names = aioconnect.json_extract(response_json, "name")
+
+    index_of_metric = all_metric_type_names.index(metric_type_name)
 
     _id = response.json()["data"]["payload"][index_of_metric]["_id"]
 
