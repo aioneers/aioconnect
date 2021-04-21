@@ -8,7 +8,7 @@ from azure.keyvault.secrets import SecretClient
 from azure.identity import AzureCliCredential
 
 
-def test_get_Metric_types():
+def test_get_metric_types():
 
     password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
@@ -19,7 +19,7 @@ def test_get_Metric_types():
     )
 
     assert (
-        aioconnect.get_Metric_types(
+        aioconnect.get_metric_types(
             token=token,
         )
         == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]

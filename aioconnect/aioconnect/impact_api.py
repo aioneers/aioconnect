@@ -9,23 +9,26 @@ import json
 from aioconnect.helpers import *
 
 
-def get_Metric_types(
+def get_metric_types(
     token: str,
     url: str = "https://dev-api.aioneers.tech/v1/metrictypes",
+    information: str = "name",
 ) -> list:
-    """get_Metric_types [summary]
+    """get_metric_types get the metric types
 
     Parameters
     ----------
     token : str
-        [description]
+        Token which was returned from the user login.
     url : str, optional
-        [description], by default "https://dev-api.aioneers.tech/v1/metrictypes"
+        url of the metric types, by default "https://dev-api.aioneers.tech/v1/metrictypes"
+    information : str
+        Which information is to be extracted from the JSON response, by default "name".
 
     Returns
     -------
     list
-        [description]
+        List of the metric type information
     """
     response = request(
         method="GET",
@@ -33,7 +36,7 @@ def get_Metric_types(
         headers={"Authorization": f"Bearer {token}"},
     )
 
-    return json_extract(response.json()["data"]["payload"], "name")
+    return json_extract(response.json()["data"]["payload"], information)
 
 
 def get_DOT_types(token: str):
@@ -63,7 +66,7 @@ def get_DOT_types(token: str):
 
     response_json = response.json()["data"]["payload"]
 
-    res = aioconnect.json_extract(response_json, "name")
+    res = json_extract(response_json, "name")
 
     return res
 
@@ -100,7 +103,7 @@ def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
 
     response_json = response.json()["data"]["payload"]
 
-    all_DOT_type_names = aioconnect.get_DOT_types(token=token)
+    all_DOT_type_names = get_DOT_types(token=token)
 
     index_of_DOT_type = all_DOT_type_names.index(DOT_type_name)
 
@@ -139,7 +142,7 @@ def get_metric_type_id_wMetric_type_name(token: str, metric_type_name: str):
 
     response_json = response.json()["data"]["payload"]
 
-    all_metric_type_names = aioconnect.json_extract(response_json, "name")
+    all_metric_type_names = json_extract(response_json, "name")
 
     index_of_metric = all_metric_type_names.index(metric_type_name)
 
