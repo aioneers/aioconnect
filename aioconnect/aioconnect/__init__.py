@@ -9,6 +9,7 @@ from .impact_api import (
     get_DOT_type_id_wDOT_type_name,
     get_DOT_types,
     get_metric_types,
+    get_types,
 )
 
 from .helpers import json_extract
@@ -17,4 +18,4 @@ from .helpers import json_extract
 from .impact_api import _get_initiative_templates
 
 # To be deprecated
-from .impact_api import transform_qlik_string
+from .impact_api import transform_string

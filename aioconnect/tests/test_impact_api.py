@@ -8,6 +8,158 @@ from azure.keyvault.secrets import SecretClient
 from azure.identity import AzureCliCredential
 
 
+class Test_get_types:
+    def test_dot(self):
+
+        password = aiox.vault_get_secret(
+            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+        )
+        token = aioconnect.get_token(
+            email="sebastian.szilvas@aioneers.com",
+            password=f"{password}",
+        )
+
+        assert aioconnect.get_types(
+            token=token,
+            url="https://dev-api.aioneers.tech/v1/",
+            information="name",
+            type="dot",
+        ) == [
+            "Material",
+            "Master Data Object",
+            "Master Data Process",
+            "Asset",
+            "Line",
+            "Production Department",
+            "Customer Invoice",
+            "Supplier Invoice",
+            "Supplier",
+            "Customer",
+            "Process",
+            "Plant",
+            "IT System",
+            "Supplier Segment",
+            "Cost Center",
+            "Warehouse",
+            "Lane",
+            "Destination",
+            "Project",
+            "Product Group",
+            "Product Segment",
+            "Customer Segment",
+            "Standard",
+            "Data Object",
+            "Capacity Resource",
+            "Business Partner",
+            "Organizational Unit",
+            "Account",
+            "Location",
+            "Relation",
+            "Document Type",
+        ]
+
+    def test_DOT(self):
+
+        password = aiox.vault_get_secret(
+            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+        )
+        token = aioconnect.get_token(
+            email="sebastian.szilvas@aioneers.com",
+            password=f"{password}",
+        )
+
+        assert aioconnect.get_types(token=token, information="name", type="DOT",) == [
+            "Material",
+            "Master Data Object",
+            "Master Data Process",
+            "Asset",
+            "Line",
+            "Production Department",
+            "Customer Invoice",
+            "Supplier Invoice",
+            "Supplier",
+            "Customer",
+            "Process",
+            "Plant",
+            "IT System",
+            "Supplier Segment",
+            "Cost Center",
+            "Warehouse",
+            "Lane",
+            "Destination",
+            "Project",
+            "Product Group",
+            "Product Segment",
+            "Customer Segment",
+            "Standard",
+            "Data Object",
+            "Capacity Resource",
+            "Business Partner",
+            "Organizational Unit",
+            "Account",
+            "Location",
+            "Relation",
+            "Document Type",
+        ]
+
+    def test_METRIC(self):
+
+        password = aiox.vault_get_secret(
+            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+        )
+        token = aioconnect.get_token(
+            email="sebastian.szilvas@aioneers.com",
+            password=f"{password}",
+        )
+
+        assert (
+            aioconnect.get_types(
+                token=token,
+                url="https://dev-api.aioneers.tech/v1/",
+                information="name",
+                type="METRIC",
+            )
+            == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]
+        )
+
+    def test_metric(self):
+
+        password = aiox.vault_get_secret(
+            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+        )
+        token = aioconnect.get_token(
+            email="sebastian.szilvas@aioneers.com",
+            password=f"{password}",
+        )
+
+        assert (
+            aioconnect.get_types(
+                token=token,
+                information="name",
+                type="metric",
+            )
+            == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]
+        )
+
+    def test_metric_IDs(self):
+
+        password = aiox.vault_get_secret(
+            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+        )
+        token = aioconnect.get_token(
+            email="sebastian.szilvas@aioneers.com",
+            password=f"{password}",
+        )
+
+        assert aioconnect.get_types(token=token, information="_id", type="metric",) == [
+            "5fb7bf2f8ce87f0012fcc8f3",
+            "5fb7cc5c8ce87f0012fcc918",
+            "60018ae0f10fa9001326747c",
+            "6019ed8072b96c00133df30d",
+            "6063127e01b2550013be8b63",
+        ]
+
+
 def test_get_metric_types():
 
     password = aiox.vault_get_secret(
@@ -646,7 +798,7 @@ def test_update_DOT_wID_w_timestamp():
 
 
 def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
-    username, df_t = aioconnect.transform_qlik_string(
+    username, df_t = aioconnect.transform_string(
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
 
@@ -670,7 +822,7 @@ def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
 
 
 def test_create_bulk_DOT_woDOT_type_woMETRIC_type():
-    username, df_t = aioconnect.transform_qlik_string(
+    username, df_t = aioconnect.transform_string(
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
 

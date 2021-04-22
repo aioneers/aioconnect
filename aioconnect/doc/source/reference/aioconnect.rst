@@ -10,11 +10,11 @@ List of Functions
    post_login
    create_DOT
    create_bulk_DOT
-   transform_qlik_string
+   transform_string
 
 Definition of Functions
 ~~~~~~~~~~~~~~~~~~~~~~~
 .. autofunction:: post_login
 .. autofunction:: create_DOT
 .. autofunction:: create_bulk_DOT
-.. autofunction:: transform_qlik_string
+.. autofunction:: transform_string

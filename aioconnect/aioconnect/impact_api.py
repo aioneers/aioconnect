@@ -9,6 +9,30 @@ import json
 from aioconnect.helpers import *
 
 
+def get_types(
+    token: str,
+    url: str = "https://dev-api.aioneers.tech/v1/",
+    information: str = "name",
+    type: str = "DOT",
+) -> list:
+
+    url = url.strip("/")
+    type = type.lower()
+
+    if type == "metric":
+        url += "/metricTypes"
+    else:
+        url += "/trackingObjectTypes"
+
+    response = request(
+        method="GET",
+        url=url,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    return json_extract(response.json()["data"]["payload"], information)
+
+
 def get_metric_types(
     token: str,
     url: str = "https://dev-api.aioneers.tech/v1/metrictypes",
@@ -542,7 +566,7 @@ def create_bulk_DOT(
 
     Examples
     --------
-    >>> username, df_t = transform_qlik_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
+    >>> username, df_t = transform_string(arg_string = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463")
     >>> mytoken = get_token()
     >>> res = create_bulk_DOT(
     >>>     token = mytoken,
@@ -585,9 +609,8 @@ def create_bulk_DOT(
 
 
 # To be deprecated
-def transform_qlik_string(arg_string: str):
-    """
-    Transform the string input from Qlik Sense and extract the relevant information.
+def transform_string(arg_string: str) -> pd.DataFrame:
+    """Transform the string input from Qlik Sense and extract the relevant information.
 
     Parameters
     ----------
@@ -597,16 +620,16 @@ def transform_qlik_string(arg_string: str):
     Returns
     -------
 
-    username : str
+    str
         The username, extracted from the string.
 
-    df_t : Pandas.DataFrame
+    Pandas.DataFrame
         A dataframe containing the information in a structured format.
 
     Examples
     --------
     >>> input_from_qlik = "UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
-    >>> (username, dots_df) = transform_qlik_string(arg_string=input_from_qlik)
+    >>> (username, dots_df) = transform_string(arg_string=input_from_qlik)
     """
 
     df = pd.DataFrame(data=arg_string.split(";"))
