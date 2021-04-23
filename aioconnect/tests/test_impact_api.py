@@ -114,6 +114,15 @@ class Test_get:
             "6063127e01b2550013be8b63",
         ]
 
+    def test_metric_IDs_no_key(self):
+        assert aioconnect.get(token=self.token, object="metric",) == [
+            "5fb7bf2f8ce87f0012fcc8f3",
+            "5fb7cc5c8ce87f0012fcc918",
+            "60018ae0f10fa9001326747c",
+            "6019ed8072b96c00133df30d",
+            "6063127e01b2550013be8b63",
+        ]
+
     def test_hdjfhskhkfd(self):
         try:
             assert aioconnect.get(token=self.token, key="name", object="hdjfhskhkfd",)

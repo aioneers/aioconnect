@@ -8,11 +8,36 @@ from datetime import datetime
 import json
 from aioconnect.helpers import *
 
-url = "https://dev-api.aioneers.tech/v1/"
 
+def get(
+    token: str,
+    url: str = "https://dev-api.aioneers.tech/v1/",
+    object: str = "DOT",
+    key: str = "_id",
+) -> list:
+    """get List of values for a key of an object of the API
 
-def get(token: str, url: str = url, object: str = "DOT", key: str = "name",) -> list:
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login
+    url : str, optional
+        Url of the API, by default "https://dev-api.aioneers.tech/v1/"
+    object : str, optional
+        object to be extracted from the API, by default "DOT"
+    key : str, optional
+        key of the , by default "_id"
 
+    Returns
+    -------
+    list
+        Values for the provided key of the object
+
+    Raises
+    ------
+    ValueError
+        In case there was an object type given which does not exist
+    """
     url = url.strip("/")
     object = object.lower()
 
