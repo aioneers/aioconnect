@@ -20,3 +20,14 @@ def json_extract(obj, key):
 
     values = extract(obj, arr, key)
     return values
+
+
+def get_objects(url,headers,payload,feature):
+    list1=[]
+    response = json.loads((requests.request("GET", url, headers=headers, data=payload)).text)['data']['payload']
+    response.raise_for_status()
+    count = len(response)
+    for i in range(0,count):
+        x = response[i][feature]
+        list1.append(x)
+    return list1

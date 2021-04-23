@@ -8,10 +8,14 @@ from datetime import datetime
 import json
 from aioconnect.helpers import *
 
+url ="https://dev-api.aioneers.tech/v1/"
+
+class TypeNotFound(Exception):
+    pass
 
 def get_types(
     token: str,
-    url: str = "https://dev-api.aioneers.tech/v1/",
+    url = url,
     information: str = "name",
     type: str = "DOT",
 ) -> list:
@@ -19,48 +23,44 @@ def get_types(
     url = url.strip("/")
     type = type.lower()
 
-    if type == "metric":
+    if type in "metric":
         url += "/metricTypes"
-    else:
+    elif type in "trackingObjectTypes":
         url += "/trackingObjectTypes"
+    else:
+        raise TypeNotFound
 
-    response = request(
-        method="GET",
-        url=url,
-        headers={"Authorization": f"Bearer {token}"},
-    )
-
-    return json_extract(response.json()["data"]["payload"], information)
+    get_objects(url,headers,payload,feature)
 
 
-def get_metric_types(
-    token: str,
-    url: str = "https://dev-api.aioneers.tech/v1/metrictypes",
-    information: str = "name",
-) -> list:
-    """get_metric_types get the metric types
+# def get_metric_types(
+#     token: str,
+#     url: str = "https://dev-api.aioneers.tech/v1/metrictypes",
+#     information: str = "name",
+# ) -> list:
+#     """get_metric_types get the metric types
 
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
-    url : str, optional
-        url of the metric types, by default "https://dev-api.aioneers.tech/v1/metrictypes"
-    information : str
-        Which information is to be extracted from the JSON response, by default "name".
+#     Parameters
+#     ----------
+#     token : str
+#         Token which was returned from the user login.
+#     url : str, optional
+#         url of the metric types, by default "https://dev-api.aioneers.tech/v1/metrictypes"
+#     information : str
+#         Which information is to be extracted from the JSON response, by default "name".
 
-    Returns
-    -------
-    list
-        List of the metric type information
-    """
-    response = request(
-        method="GET",
-        url=url,
-        headers={"Authorization": f"Bearer {token}"},
-    )
+#     Returns
+#     -------
+#     list
+#         List of the metric type information
+#     """
+#     response = request(
+#         method="GET",
+#         url=url,
+#         headers={"Authorization": f"Bearer {token}"},
+#     )
 
-    return json_extract(response.json()["data"]["payload"], information)
+#     return json_extract(response.json()["data"]["payload"], information)
 
 
 def get_DOT_types(token: str):
@@ -93,6 +93,56 @@ def get_DOT_types(token: str):
     res = json_extract(response_json, "name")
 
     return res
+
+
+def get_type_id(
+    token: str,
+    type_name: str,
+    url: str = "https://dev-api.aioneers.tech/v1/") -> str:
+    """
+    Get the id of the DOT type given the DOT type name
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+
+    DOT_type_name : str
+        Name of the DOT type. Current options are:
+        'Material', 'Master Data Object', 'Master Data Process', 'Asset', 'Line', 'Production Department', 'Customer Invoice', 'Supplier Invoice', 'Supplier', 'Customer', 'Process', 'Plant', 'IT System', 'Supplier Segment', 'Cost Center', 'Warehouse', 'Lane', 'Destination', 'Project', 'Product Group', 'Product Segment', 'Customer Segment', 'Standard', 'Data Object', 'Capacity Resource', 'Business Partner', 'Organizational Unit', 'Account', 'Location', 'Relation', 'Document Type'
+
+    Returns
+    -------
+
+    _id : str
+        ID of the metric type.
+
+    """
+
+    url = url.strip("/")
+    type_name = type_name.lower()
+
+    if type in "metric":
+        url += "/metricTypes"
+    elif type in "trackingObjectTypes":
+        url += "/trackingObjectTypes"
+    else:
+        raise TypeNotFound
+
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = json.loads((requests.request("GET", url, headers=headers, data=payload)).text)
+    count = len(response['data']['payload'])
+
+    list1=[]
+
+    for i in range(0,count):
+        x = response['data']['payload'][i]['_id']
+        list1.append(x)
+
+    list1
+
+    return list1
 
 
 def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
