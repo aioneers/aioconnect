@@ -1,6 +1,6 @@
+from numpy import info
 import requests
 from requests import Request, Session
-from requests import request
 
 import io
 import pandas as pd
@@ -8,141 +8,29 @@ from datetime import datetime
 import json
 from aioconnect.helpers import *
 
-url ="https://dev-api.aioneers.tech/v1/"
+url = "https://dev-api.aioneers.tech/v1/"
 
-class TypeNotFound(Exception):
-    pass
 
-def get_types(
-    token: str,
-    url = url,
-    information: str = "name",
-    type: str = "DOT",
-) -> list:
+def get(token: str, url: str = url, object: str = "DOT", key: str = "name",) -> list:
 
     url = url.strip("/")
-    type = type.lower()
+    object = object.lower()
 
-    if type in "metric":
+    if object == "metric":
         url += "/metricTypes"
-    elif type in "trackingObjectTypes":
+    elif object == "dot":
         url += "/trackingObjectTypes"
     else:
-        raise TypeNotFound
+        raise ValueError
 
-    get_objects(url,headers,payload,feature)
-
-
-# def get_metric_types(
-#     token: str,
-#     url: str = "https://dev-api.aioneers.tech/v1/metrictypes",
-#     information: str = "name",
-# ) -> list:
-#     """get_metric_types get the metric types
-
-#     Parameters
-#     ----------
-#     token : str
-#         Token which was returned from the user login.
-#     url : str, optional
-#         url of the metric types, by default "https://dev-api.aioneers.tech/v1/metrictypes"
-#     information : str
-#         Which information is to be extracted from the JSON response, by default "name".
-
-#     Returns
-#     -------
-#     list
-#         List of the metric type information
-#     """
-#     response = request(
-#         method="GET",
-#         url=url,
-#         headers={"Authorization": f"Bearer {token}"},
-#     )
-
-#     return json_extract(response.json()["data"]["payload"], information)
-
-
-def get_DOT_types(token: str):
-    """
-    Get all available DOT types
-
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
-
-    Returns
-    -------
-
-    res : list
-        List of all available DOT types.
-
-    """
-    url = "https://dev-api.aioneers.tech/v1/trackingObjectTypes"
-
-    headers = {"Authorization": f"Bearer {token}"}
-
-    response = requests.get(
-        url=url,
-        headers=headers,
+    response = requests.request(
+        "GET", url, headers={"Authorization": f"Bearer {token}"}
     )
+    response.raise_for_status()
 
-    response_json = response.json()["data"]["payload"]
+    json_data = response.json()["data"]["payload"]
 
-    res = json_extract(response_json, "name")
-
-    return res
-
-
-def get_type_id(
-    token: str,
-    type_name: str,
-    url: str = "https://dev-api.aioneers.tech/v1/") -> str:
-    """
-    Get the id of the DOT type given the DOT type name
-
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
-
-    DOT_type_name : str
-        Name of the DOT type. Current options are:
-        'Material', 'Master Data Object', 'Master Data Process', 'Asset', 'Line', 'Production Department', 'Customer Invoice', 'Supplier Invoice', 'Supplier', 'Customer', 'Process', 'Plant', 'IT System', 'Supplier Segment', 'Cost Center', 'Warehouse', 'Lane', 'Destination', 'Project', 'Product Group', 'Product Segment', 'Customer Segment', 'Standard', 'Data Object', 'Capacity Resource', 'Business Partner', 'Organizational Unit', 'Account', 'Location', 'Relation', 'Document Type'
-
-    Returns
-    -------
-
-    _id : str
-        ID of the metric type.
-
-    """
-
-    url = url.strip("/")
-    type_name = type_name.lower()
-
-    if type in "metric":
-        url += "/metricTypes"
-    elif type in "trackingObjectTypes":
-        url += "/trackingObjectTypes"
-    else:
-        raise TypeNotFound
-
-    headers = {"Authorization": f"Bearer {token}"}
-
-    response = json.loads((requests.request("GET", url, headers=headers, data=payload)).text)
-    count = len(response['data']['payload'])
-
-    list1=[]
-
-    for i in range(0,count):
-        x = response['data']['payload'][i]['_id']
-        list1.append(x)
-
-    list1
-
-    return list1
+    return get_values(json_data=json_data, key=key)
 
 
 def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
@@ -170,14 +58,11 @@ def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
 
     headers = {"Authorization": f"Bearer {token}"}
 
-    response = requests.get(
-        url=url,
-        headers=headers,
-    )
+    response = requests.get(url=url, headers=headers,)
 
     response_json = response.json()["data"]["payload"]
 
-    all_DOT_type_names = get_DOT_types(token=token)
+    all_DOT_type_names = get(token=token, key="name", object="DOT")
 
     index_of_DOT_type = all_DOT_type_names.index(DOT_type_name)
 
@@ -209,10 +94,7 @@ def get_metric_type_id_wMetric_type_name(token: str, metric_type_name: str):
 
     headers = {"Authorization": f"Bearer {token}"}
 
-    response = requests.get(
-        url=url,
-        headers=headers,
-    )
+    response = requests.get(url=url, headers=headers,)
 
     response_json = response.json()["data"]["payload"]
 
@@ -288,10 +170,7 @@ def create_or_update_DOT_wName_wDescription(
         url += "&description=" + DOT_description
 
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(
-        url=url,
-        headers=headers,
-    )
+    response = requests.get(url=url, headers=headers,)
     response.raise_for_status()
 
     total = response.json()["data"]["total"]
@@ -351,10 +230,7 @@ def _get_initiative_templates(token: str):
     url = url.rstrip("/")
 
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(
-        url=url,
-        headers=headers,
-    )
+    response = requests.get(url=url, headers=headers,)
     response.raise_for_status()
 
     res = response.json()["data"]["payload"]
@@ -363,8 +239,7 @@ def _get_initiative_templates(token: str):
 
 
 def get_token(
-    email: str,
-    password: str,
+    email: str, password: str,
 ):
     """
     Log into AIO Impact and get a token.
@@ -592,7 +467,7 @@ def create_bulk_DOT(
     METRIC_type_id: str = "5fb7bf2f8ce87f0012fcc8f3",
 ):
     """
-    Function to create DOTs from a data frame and additional information.
+    Function to create DOTs from a data frame and additional key.
 
     Parameters
     ----------
@@ -600,7 +475,7 @@ def create_bulk_DOT(
         Token which was returned from the user login.
 
     dots_df : Pandas.DataFrame
-        Dataframe which contains the information in the same format as it would be in the CSV upload.
+        Dataframe which contains the key in the same format as it would be in the CSV upload.
 
     DOT_type_id : str
         ID of the DOT type.
@@ -660,7 +535,7 @@ def create_bulk_DOT(
 
 # To be deprecated
 def transform_string(arg_string: str) -> pd.DataFrame:
-    """Transform the string input from Qlik Sense and extract the relevant information.
+    """Transform the string input from Qlik Sense and extract the relevant key.
 
     Parameters
     ----------
@@ -674,7 +549,7 @@ def transform_string(arg_string: str) -> pd.DataFrame:
         The username, extracted from the string.
 
     Pandas.DataFrame
-        A dataframe containing the information in a structured format.
+        A dataframe containing the key in a structured format.
 
     Examples
     --------
@@ -684,10 +559,7 @@ def transform_string(arg_string: str) -> pd.DataFrame:
 
     df = pd.DataFrame(data=arg_string.split(";"))
 
-    df = df[0].str.split(
-        pat="=",
-        expand=True,
-    )
+    df = df[0].str.split(pat="=", expand=True,)
     df.columns = ["Field", "Value"]
 
     username = df[df["Field"] == " UserId"].Value

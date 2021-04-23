@@ -1,4 +1,6 @@
 """Extract nested values from a JSON tree."""
+import requests
+import json
 
 
 def json_extract(obj, key):
@@ -22,12 +24,28 @@ def json_extract(obj, key):
     return values
 
 
-def get_objects(url,headers,payload,feature):
-    list1=[]
-    response = json.loads((requests.request("GET", url, headers=headers, data=payload)).text)['data']['payload']
-    response.raise_for_status()
-    count = len(response)
-    for i in range(0,count):
-        x = response[i][feature]
-        list1.append(x)
-    return list1
+def get_values(json_data: list, key: str = "_id") -> list:
+    """get_value [summary]
+
+    Parameters
+    ----------
+    json_data : list
+        [description]
+    key : str, optional
+        [description], by default "_id"
+
+    Returns
+    -------
+    list
+        [description]
+    """
+
+    if key == "":
+        raise ValueError
+
+    ret_list = []
+    count = len(json_data)
+    for i in range(0, count):
+        x = json_data[i][key]
+        ret_list.append(x)
+    return ret_list

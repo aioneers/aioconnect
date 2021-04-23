@@ -1,30 +1,25 @@
 import json
 import aioconnect
+from aioconnect.helpers import get_values
 import aiox
 import requests
 
 
 from azure.keyvault.secrets import SecretClient
 from azure.identity import AzureCliCredential
+from requests.models import guess_json_utf
 
 
-class Test_get_types:
+class Test_get:
+    password = aiox.vault_get_secret(
+        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+    )
+    token = aioconnect.get_token(
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
+    )
+
     def test_dot(self):
-
-        password = aiox.vault_get_secret(
-            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-        )
-        token = aioconnect.get_token(
-            email="sebastian.szilvas@aioneers.com",
-            password=f"{password}",
-        )
-
-        assert aioconnect.get_types(
-            token=token,
-            url="https://dev-api.aioneers.tech/v1/",
-            information="name",
-            type="dot",
-        ) == [
+        assert aioconnect.get(token=self.token, key="name", object="dot",) == [
             "Material",
             "Master Data Object",
             "Master Data Process",
@@ -59,16 +54,7 @@ class Test_get_types:
         ]
 
     def test_DOT(self):
-
-        password = aiox.vault_get_secret(
-            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-        )
-        token = aioconnect.get_token(
-            email="sebastian.szilvas@aioneers.com",
-            password=f"{password}",
-        )
-
-        assert aioconnect.get_types(token=token, information="name", type="DOT",) == [
+        assert aioconnect.get(token=self.token, key="name", object="DOT",) == [
             "Material",
             "Master Data Object",
             "Master Data Process",
@@ -103,55 +89,24 @@ class Test_get_types:
         ]
 
     def test_METRIC(self):
-
-        password = aiox.vault_get_secret(
-            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-        )
-        token = aioconnect.get_token(
-            email="sebastian.szilvas@aioneers.com",
-            password=f"{password}",
-        )
-
-        assert (
-            aioconnect.get_types(
-                token=token,
-                url="https://dev-api.aioneers.tech/v1/",
-                information="name",
-                type="METRIC",
-            )
-            == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]
-        )
+        assert aioconnect.get(
+            token=self.token,
+            url="https://dev-api.aioneers.tech/v1/",
+            key="name",
+            object="METRIC",
+        ) == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]
 
     def test_metric(self):
-
-        password = aiox.vault_get_secret(
-            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-        )
-        token = aioconnect.get_token(
-            email="sebastian.szilvas@aioneers.com",
-            password=f"{password}",
-        )
-
-        assert (
-            aioconnect.get_types(
-                token=token,
-                information="name",
-                type="metric",
-            )
-            == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]
-        )
+        assert aioconnect.get(token=self.token, key="name", object="metric",) == [
+            "Financial",
+            "Percentage",
+            "Countable",
+            "Other",
+            "My second DOT",
+        ]
 
     def test_metric_IDs(self):
-
-        password = aiox.vault_get_secret(
-            scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-        )
-        token = aioconnect.get_token(
-            email="sebastian.szilvas@aioneers.com",
-            password=f"{password}",
-        )
-
-        assert aioconnect.get_types(token=token, information="_id", type="metric",) == [
+        assert aioconnect.get(token=self.token, key="_id", object="metric",) == [
             "5fb7bf2f8ce87f0012fcc8f3",
             "5fb7cc5c8ce87f0012fcc918",
             "60018ae0f10fa9001326747c",
@@ -159,68 +114,11 @@ class Test_get_types:
             "6063127e01b2550013be8b63",
         ]
 
-
-def test_get_metric_types():
-
-    password = aiox.vault_get_secret(
-        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-    )
-    token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
-    )
-
-    assert (
-        aioconnect.get_metric_types(
-            token=token,
-        )
-        == ["Financial", "Percentage", "Countable", "Other", "My second DOT"]
-    )
-
-
-def test_get_DOT_types():
-
-    password = aiox.vault_get_secret(
-        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-    )
-    token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
-    )
-
-    assert aioconnect.get_DOT_types(token=token,) == [
-        "Material",
-        "Master Data Object",
-        "Master Data Process",
-        "Asset",
-        "Line",
-        "Production Department",
-        "Customer Invoice",
-        "Supplier Invoice",
-        "Supplier",
-        "Customer",
-        "Process",
-        "Plant",
-        "IT System",
-        "Supplier Segment",
-        "Cost Center",
-        "Warehouse",
-        "Lane",
-        "Destination",
-        "Project",
-        "Product Group",
-        "Product Segment",
-        "Customer Segment",
-        "Standard",
-        "Data Object",
-        "Capacity Resource",
-        "Business Partner",
-        "Organizational Unit",
-        "Account",
-        "Location",
-        "Relation",
-        "Document Type",
-    ]
+    def test_hdjfhskhkfd(self):
+        try:
+            assert aioconnect.get(token=self.token, key="name", object="hdjfhskhkfd",)
+        except ValueError:
+            pass
 
 
 def test_get_DOT_type_id_wDOT_type_Name():
@@ -229,8 +127,7 @@ def test_get_DOT_type_id_wDOT_type_Name():
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     assert (
@@ -438,8 +335,7 @@ def test_get_metric_type_id_wMetric_type_name():
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     assert (
@@ -483,8 +379,7 @@ def test_create_or_update_DOT_wName_wDescription_DOT_not_existing():
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     DOT_name = "Pytest DOT"
@@ -506,8 +401,7 @@ def test_create_or_update_DOT_wName_wDescription_DOT_not_existing():
 
     # Clean up after creation
     aioconnect.delete_DOT_wID(
-        token=token,
-        DOT_id=res.json()["data"]["_id"],
+        token=token, DOT_id=res.json()["data"]["_id"],
     )
 
 
@@ -516,8 +410,7 @@ def test_create_or_update_DOT_wName_wDescription_DOT_existing():
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     DOT_name = "Pytest DOT"
@@ -549,8 +442,7 @@ def test_create_or_update_DOT_wName_wDescription_DOT_existing():
 
     # Clean up after creation
     aioconnect.delete_DOT_wID(
-        token=token,
-        DOT_id=just_created_DOT["_id"],
+        token=token, DOT_id=just_created_DOT["_id"],
     )
 
 
@@ -560,8 +452,7 @@ def test_create_or_update_DOT_wName_wDescription_multipleDOTs():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     DOT_name = "My real TEST_DOT"
@@ -611,13 +502,10 @@ def test_get_initiative_templates():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
-    res = aioconnect._get_initiative_templates(
-        token=token,
-    )
+    res = aioconnect._get_initiative_templates(token=token,)
 
     print(res)
 
@@ -630,8 +518,7 @@ def test_get_token():
     )
 
     res = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     assert isinstance(res, str)
@@ -641,8 +528,7 @@ def test_get_token():
 def test_get_token_w_wrong_password():
     try:
         res = aioconnect.get_token(
-            email="sebastian.szilvas@aioneers.com",
-            password="wrong password",
+            email="sebastian.szilvas@aioneers.com", password="wrong password",
         )
     except requests.exceptions.HTTPError as exception:
         print(exception)
@@ -655,8 +541,7 @@ def test_delete_DOT_wID():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     # First create a DOT
@@ -671,10 +556,7 @@ def test_delete_DOT_wID():
 
     just_created_DOT_ID = tmp_res.json()["data"]["_id"]
 
-    res = aioconnect.delete_DOT_wID(
-        token=token,
-        DOT_id=just_created_DOT_ID,
-    )
+    res = aioconnect.delete_DOT_wID(token=token, DOT_id=just_created_DOT_ID,)
 
     assert res.json()["message"] == "success"
 
@@ -685,8 +567,7 @@ def test_create_DOT():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     res = aioconnect.create_DOT(
@@ -703,8 +584,7 @@ def test_create_DOT():
     # Clean up after creation
     just_created_DOT_ID = res.json()["data"]["_id"]
     aioconnect.delete_DOT_wID(
-        token=token,
-        DOT_id=just_created_DOT_ID,
+        token=token, DOT_id=just_created_DOT_ID,
     )
 
 
@@ -714,8 +594,7 @@ def test_create_DOT_wo_DOT_description():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     res = aioconnect.create_DOT(
@@ -731,8 +610,7 @@ def test_create_DOT_wo_DOT_description():
     # Clean up after creation
     just_created_DOT_ID = res.json()["data"]["_id"]
     aioconnect.delete_DOT_wID(
-        token=token,
-        DOT_id=just_created_DOT_ID,
+        token=token, DOT_id=just_created_DOT_ID,
     )
 
 
@@ -742,8 +620,7 @@ def test_update_DOT_wID_wo_timestamp():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     # First create a DOT
@@ -772,8 +649,7 @@ def test_update_DOT_wID_w_timestamp():
     )
 
     token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     # First create a DOT
@@ -807,8 +683,7 @@ def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
     )
 
     mytoken = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
     res = aioconnect.create_bulk_DOT(
@@ -831,13 +706,10 @@ def test_create_bulk_DOT_woDOT_type_woMETRIC_type():
     )
 
     mytoken = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
+        email="sebastian.szilvas@aioneers.com", password=f"{password}",
     )
 
-    res = aioconnect.create_bulk_DOT(
-        token=mytoken,
-        dots_df=df_t,
-    )
+    res = aioconnect.create_bulk_DOT(token=mytoken, dots_df=df_t,)
 
     assert res.json()["message"] == "success"
+
