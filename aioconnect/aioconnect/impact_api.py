@@ -9,10 +9,10 @@ import json
 from aioconnect.helpers import *
 
 
-def get(
+def get_list(
     token: str,
     url: str = "https://dev-api.aioneers.tech/v1/",
-    object: str = "DOT",
+    object: str = "dotTypes",
     key: str = "_id",
 ) -> list:
     """get List of values for a key of an object of the API
@@ -24,7 +24,7 @@ def get(
     url : str, optional
         Url of the API, by default "https://dev-api.aioneers.tech/v1/"
     object : str, optional
-        object to be extracted from the API, by default "DOT"
+        object to be extracted from the API, by default "dotTypes"
     key : str, optional
         key of the , by default "_id"
 
@@ -38,13 +38,61 @@ def get(
     ValueError
         In case there was an object type given which does not exist
     """
+
+    json_data = get_object(token=token, url=url, object=object)
+
+    return get_values(json_data=json_data, key=key)
+
+
+def get_object(
+    token: str,
+    url: str = "https://dev-api.aioneers.tech/v1/",
+    object: str = "dotTypes",
+) -> list:
+    """get_object [summary]
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login
+    url : str, optional
+        Url of the API, by default "https://dev-api.aioneers.tech/v1/"
+    object : str, optional
+        object to be extracted from the API, by default "dotTypes"
+
+    Returns
+    -------
+    list
+        [description]
+
+    Raises
+    ------
+    ValueError
+        [description]
+    """
     url = url.strip("/")
     object = object.lower()
 
-    if object == "metric":
+    if object == "metrictypes":
         url += "/metricTypes"
-    elif object == "dot":
+    elif object == "metrics":
+        url += "/metrics"
+    elif object == "dottypes" or object == "trackingobjecttypes":
         url += "/trackingObjectTypes"
+    elif object == "dots" or object == "trackingobjects":
+        url += "/trackingObjects"
+    elif object == "actions":
+        url += "/actions"
+    elif object == "actiontemplates":
+        url += "/actionTemplates"
+    elif object == "measuretemplates":
+        url += "/measureTemplates"
+    elif object == "measures":
+        url += "/measures"
+    elif object == "initiativetemplates":
+        url += "/initiativeTemplates"
+    elif object == "initiatives":
+        url += "/initiatives"
     else:
         raise ValueError
 
@@ -53,214 +101,212 @@ def get(
     )
     response.raise_for_status()
 
-    json_data = response.json()["data"]["payload"]
-
-    return get_values(json_data=json_data, key=key)
+    return response.json()["data"]["payload"]
 
 
-def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
-    """
-    Get the id of the DOT type given the DOT type name
+# def get_DOT_type_id_wDOT_type_name(token: str, DOT_type_name: str):
+#     """
+#     Get the id of the DOT type given the DOT type name
 
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
+#     Parameters
+#     ----------
+#     token : str
+#         Token which was returned from the user login.
 
-    DOT_type_name : str
-        Name of the DOT type. Current options are:
-        'Material', 'Master Data Object', 'Master Data Process', 'Asset', 'Line', 'Production Department', 'Customer Invoice', 'Supplier Invoice', 'Supplier', 'Customer', 'Process', 'Plant', 'IT System', 'Supplier Segment', 'Cost Center', 'Warehouse', 'Lane', 'Destination', 'Project', 'Product Group', 'Product Segment', 'Customer Segment', 'Standard', 'Data Object', 'Capacity Resource', 'Business Partner', 'Organizational Unit', 'Account', 'Location', 'Relation', 'Document Type'
+#     DOT_type_name : str
+#         Name of the DOT type. Current options are:
+#         'Material', 'Master Data Object', 'Master Data Process', 'Asset', 'Line', 'Production Department', 'Customer Invoice', 'Supplier Invoice', 'Supplier', 'Customer', 'Process', 'Plant', 'IT System', 'Supplier Segment', 'Cost Center', 'Warehouse', 'Lane', 'Destination', 'Project', 'Product Group', 'Product Segment', 'Customer Segment', 'Standard', 'Data Object', 'Capacity Resource', 'Business Partner', 'Organizational Unit', 'Account', 'Location', 'Relation', 'Document Type'
 
-    Returns
-    -------
+#     Returns
+#     -------
 
-    _id : str
-        ID of the metric type.
+#     _id : str
+#         ID of the metric type.
 
-    """
+#     """
 
-    url = "https://dev-api.aioneers.tech/v1/trackingObjectTypes"
+#     url = "https://dev-api.aioneers.tech/v1/trackingObjectTypes"
 
-    headers = {"Authorization": f"Bearer {token}"}
+#     headers = {"Authorization": f"Bearer {token}"}
 
-    response = requests.get(url=url, headers=headers,)
+#     response = requests.get(url=url, headers=headers,)
 
-    response_json = response.json()["data"]["payload"]
+#     response_json = response.json()["data"]["payload"]
 
-    all_DOT_type_names = get(token=token, key="name", object="DOT")
+#     all_DOT_type_names = get_list(token=token, key="name", object="DOT")
 
-    index_of_DOT_type = all_DOT_type_names.index(DOT_type_name)
+#     index_of_DOT_type = all_DOT_type_names.index(DOT_type_name)
 
-    _id = response_json[index_of_DOT_type]["_id"]
+#     _id = response_json[index_of_DOT_type]["_id"]
 
-    return _id
-
-
-def get_metric_type_id_wMetric_type_name(token: str, metric_type_name: str):
-    """
-    Get the id of the metric type given the metric type name
-
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
-
-    metric_type_name : str
-        Name of the metric type. Current options are "Financial", "Percentage", "Countable", "Other", "My second DOT"
-
-    Returns
-    -------
-
-    _id : str
-        ID of the metric type.
-
-    """
-    url = "https://dev-api.aioneers.tech/v1/metrictypes"
-
-    headers = {"Authorization": f"Bearer {token}"}
-
-    response = requests.get(url=url, headers=headers,)
-
-    response_json = response.json()["data"]["payload"]
-
-    all_metric_type_names = json_extract(response_json, "name")
-
-    index_of_metric = all_metric_type_names.index(metric_type_name)
-
-    _id = response.json()["data"]["payload"][index_of_metric]["_id"]
-
-    return _id
+#     return _id
 
 
-def create_or_update_DOT_wName_wDescription(
-    token: str,
-    DOT_name: str,
-    DOT_baseline: float,
-    DOT_description: str = None,
-    DOT_type_id: str = "6019fa2072b96c00133df326",
-    METRIC_type_id: str = "5fb7bf2f8ce87f0012fcc8f3",
-):
-    """
-    Create a new DOT in AIO Impact or update it if the DOT is already existing.
+# def get_metric_type_id_wMetric_type_name(token: str, metric_type_name: str):
+#     """
+#     Get the id of the metric type given the metric type name
 
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
+#     Parameters
+#     ----------
+#     token : str
+#         Token which was returned from the user login.
 
-    DOT_name : str
-        Name of the DOT.
+#     metric_type_name : str
+#         Name of the metric type. Current options are "Financial", "Percentage", "Countable", "Other", "My second DOT"
 
-    DOT_baseline : float
-        Baseline value of the DOT.
+#     Returns
+#     -------
 
-    DOT_description : str = DOT_name
-        Description of the DOT.
+#     _id : str
+#         ID of the metric type.
 
-    DOT_type_id : str = "6019fa2072b96c00133df326"
-        ID of the DOT type.
+#     """
+#     url = "https://dev-api.aioneers.tech/v1/metrictypes"
 
-    METRIC_type_id : str = "5fb7bf2f8ce87f0012fcc8f3"
-        ID of the METRIC type.
+#     headers = {"Authorization": f"Bearer {token}"}
 
-    Returns
-    -------
+#     response = requests.get(url=url, headers=headers,)
 
-    response : response
-        HTTP response.
+#     response_json = response.json()["data"]["payload"]
 
-    Examples
-    --------
-    >>> token = aioconnect.get_token(
-    >>> email="firstname.lastname@aioneers.com", password="xxx",
-    >>> )
-    >>>
-    >>> res = aioconnect.create_or_update_DOT_wName_wDescription(
-    >>>     token=token,
-    >>>     DOT_name="TEST_DOT",
-    >>>     DOT_description="TEST_DOT description",
-    >>>     DOT_baseline=1234,
-    >>>     DOT_type_id="6019fa2072b96c00133df326",
-    >>>     METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
-    >>> )
-    """
+#     all_metric_type_names = json_extract(response_json, "name")
 
-    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
-    url = url.rstrip("/")
-    url += "?name=" + DOT_name
+#     index_of_metric = all_metric_type_names.index(metric_type_name)
 
-    if DOT_description == None:
-        DOT_description = DOT_name
-    else:
-        url += "&description=" + DOT_description
+#     _id = response.json()["data"]["payload"][index_of_metric]["_id"]
 
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url=url, headers=headers,)
-    response.raise_for_status()
-
-    total = response.json()["data"]["total"]
-    # print("total: ", total)
-
-    if total == 0:
-        res = create_DOT(
-            token=token,
-            DOT_name=DOT_name,
-            DOT_baseline=DOT_baseline,
-            DOT_description=DOT_description,
-            DOT_type_id=DOT_type_id,
-            METRIC_type_id=METRIC_type_id,
-        )
-    elif total == 1:
-        DOT_id = response.json()["data"]["payload"][0]["_id"]
-        res = update_DOT_wID(
-            token=token, DOT_id=DOT_id, actuals=DOT_baseline, timestamp=None
-        )
-    else:
-        # Update every DOT with that DOT_name
-        for i in range(total):
-            DOT_id = response.json()["data"]["payload"][i]["_id"]
-            res = update_DOT_wID(
-                token=token, DOT_id=DOT_id, actuals=DOT_baseline, timestamp=None
-            )
-
-    return res
+#     return _id
 
 
-def _get_initiative_templates(token: str):
-    """
-    Get the initiative templates
+# def create_or_update_DOT_wName_wDescription(
+#     token: str,
+#     DOT_name: str,
+#     DOT_baseline: float,
+#     DOT_description: str = None,
+#     DOT_type_id: str = "6019fa2072b96c00133df326",
+#     METRIC_type_id: str = "5fb7bf2f8ce87f0012fcc8f3",
+# ):
+#     """
+#     Create a new DOT in AIO Impact or update it if the DOT is already existing.
 
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
+#     Parameters
+#     ----------
+#     token : str
+#         Token which was returned from the user login.
 
-    Returns
-    -------
+#     DOT_name : str
+#         Name of the DOT.
 
-    res : list
-        Initiative templates as list.
+#     DOT_baseline : float
+#         Baseline value of the DOT.
 
-    Examples
-    --------
-    >>> token = aioconnect.get_token(
-    >>> email="firstname.lastname@aioneers.com", password="xxx",
-    >>> )
-    >>> res = aioconnect._get_initiative_templates(
-    >>>     token = token,
-    >>> )
-    """
+#     DOT_description : str = DOT_name
+#         Description of the DOT.
 
-    url = "https://dev-api.aioneers.tech/v1/initiativeTemplates"
-    url = url.rstrip("/")
+#     DOT_type_id : str = "6019fa2072b96c00133df326"
+#         ID of the DOT type.
 
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(url=url, headers=headers,)
-    response.raise_for_status()
+#     METRIC_type_id : str = "5fb7bf2f8ce87f0012fcc8f3"
+#         ID of the METRIC type.
 
-    res = response.json()["data"]["payload"]
+#     Returns
+#     -------
 
-    return res
+#     response : response
+#         HTTP response.
+
+#     Examples
+#     --------
+#     >>> token = aioconnect.get_token(
+#     >>> email="firstname.lastname@aioneers.com", password="xxx",
+#     >>> )
+#     >>>
+#     >>> res = aioconnect.create_or_update_DOT_wName_wDescription(
+#     >>>     token=token,
+#     >>>     DOT_name="TEST_DOT",
+#     >>>     DOT_description="TEST_DOT description",
+#     >>>     DOT_baseline=1234,
+#     >>>     DOT_type_id="6019fa2072b96c00133df326",
+#     >>>     METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
+#     >>> )
+#     """
+
+#     url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+#     url = url.rstrip("/")
+#     url += "?name=" + DOT_name
+
+#     if DOT_description == None:
+#         DOT_description = DOT_name
+#     else:
+#         url += "&description=" + DOT_description
+
+#     headers = {"Authorization": f"Bearer {token}"}
+#     response = requests.get(url=url, headers=headers,)
+#     response.raise_for_status()
+
+#     total = response.json()["data"]["total"]
+#     # print("total: ", total)
+
+#     if total == 0:
+#         res = create_DOT(
+#             token=token,
+#             DOT_name=DOT_name,
+#             DOT_baseline=DOT_baseline,
+#             DOT_description=DOT_description,
+#             DOT_type_id=DOT_type_id,
+#             METRIC_type_id=METRIC_type_id,
+#         )
+#     elif total == 1:
+#         DOT_id = response.json()["data"]["payload"][0]["_id"]
+#         res = update_DOT_wID(
+#             token=token, DOT_id=DOT_id, actuals=DOT_baseline, timestamp=None
+#         )
+#     else:
+#         # Update every DOT with that DOT_name
+#         for i in range(total):
+#             DOT_id = response.json()["data"]["payload"][i]["_id"]
+#             res = update_DOT_wID(
+#                 token=token, DOT_id=DOT_id, actuals=DOT_baseline, timestamp=None
+#             )
+
+#     return res
+
+
+# def _get_initiative_templates(token: str):
+#     """
+#     Get the initiative templates
+
+#     Parameters
+#     ----------
+#     token : str
+#         Token which was returned from the user login.
+
+#     Returns
+#     -------
+
+#     res : list
+#         Initiative templates as list.
+
+#     Examples
+#     --------
+#     >>> token = aioconnect.get_token(
+#     >>> email="firstname.lastname@aioneers.com", password="xxx",
+#     >>> )
+#     >>> res = aioconnect._get_initiative_templates(
+#     >>>     token = token,
+#     >>> )
+#     """
+
+#     url = "https://dev-api.aioneers.tech/v1/initiativeTemplates"
+#     url = url.rstrip("/")
+
+#     headers = {"Authorization": f"Bearer {token}"}
+#     response = requests.get(url=url, headers=headers,)
+#     response.raise_for_status()
+
+#     res = response.json()["data"]["payload"]
+
+#     return res
 
 
 def get_token(
