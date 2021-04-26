@@ -37,7 +37,7 @@ $ pip install aioconnect
 
 ## Clone the repository for users with direct access
 
-git clone -b dev https://<<GITUSERNAME>>:<<PERSONALACCESSTOKEN>>@github.com/aioneers/aioconnect.git
+git clone -b dev https://GITUSERNAME:PERSONALACCESSTOKEN@github.com/aioneers/aioconnect.git
 
 Install the package locally:
 

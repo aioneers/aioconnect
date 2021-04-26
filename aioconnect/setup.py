@@ -17,7 +17,7 @@ long_description = "not yet working"
 
 setuptools.setup(
     name="aioconnect",
-    version="0.0.5",
+    version="0.0.6",
     author="AIO",
     author_email="maintainer@aioneers.com",
     license="MIT",
@@ -34,6 +34,7 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
     install_requires=[
+        "aiox",
         "pytest",
         "pydata_sphinx_theme",
         "nbsphinx",
