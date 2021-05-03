@@ -10,6 +10,5 @@ from .impact_api import (
 
 from .helpers import json_extract, get_values
 
-
 # To be deprecated
 from .impact_api import transform_string
