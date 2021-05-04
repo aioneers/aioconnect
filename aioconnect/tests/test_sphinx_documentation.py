@@ -47,7 +47,7 @@ def test_make_html(capsys):
     captured = capsys.readouterr().out
     print(captured.split("\n"))
 
-    assert captured.find("Error 2") == -1
+    assert captured.find("WARNING:") == -1
     assert captured.find("build succeeded") != -1
 
     # For some reason this does not work on the pipeline

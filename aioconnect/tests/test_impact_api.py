@@ -755,65 +755,65 @@ def test_create_DOT_wo_DOT_description():
     )
 
 
-def test_update_DOT_wID_wo_timestamp():
-    password = aiox.vault_get_secret(
-        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-    )
+# def test_update_DOT_wID_wo_timestamp():
+#     password = aiox.vault_get_secret(
+#         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+#     )
 
-    token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
-    )
+#     token = aioconnect.get_token(
+#         email="sebastian.szilvas@aioneers.com",
+#         password=f"{password}",
+#     )
 
-    # First create a DOT
-    tmp_res = aioconnect.create_DOT(
-        token=token,
-        DOT_name="TEST_DOT",
-        DOT_description="TEST_DOT description",
-        DOT_baseline=1234,
-        DOT_type_id="6019fa2072b96c00133df326",
-        METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
-    )
-    just_created_DOT_ID = tmp_res.json()["data"]["_id"]
+#     # First create a DOT
+#     tmp_res = aioconnect.create_DOT(
+#         token=token,
+#         DOT_name="TEST_DOT",
+#         DOT_description="TEST_DOT description",
+#         DOT_baseline=1234,
+#         DOT_type_id="6019fa2072b96c00133df326",
+#         METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
+#     )
+#     just_created_DOT_ID = tmp_res.json()["data"]["_id"]
 
-    res = aioconnect.update_DOT_wID(
-        token=token, DOT_id=just_created_DOT_ID, actuals=987
-    )
+#     res = aioconnect.update_DOT_wID(
+#         token=token, DOT_id=just_created_DOT_ID, actuals=987
+#     )
 
-    assert res.json()["message"] == "success"
+#     assert res.json()["message"] == "success"
 
 
-def test_update_DOT_wID_w_timestamp():
-    from datetime import datetime
+# def test_update_DOT_wID_w_timestamp():
+#     from datetime import datetime
 
-    password = aiox.vault_get_secret(
-        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
-    )
+#     password = aiox.vault_get_secret(
+#         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+#     )
 
-    token = aioconnect.get_token(
-        email="sebastian.szilvas@aioneers.com",
-        password=f"{password}",
-    )
+#     token = aioconnect.get_token(
+#         email="sebastian.szilvas@aioneers.com",
+#         password=f"{password}",
+#     )
 
-    # First create a DOT
-    tmp_res = aioconnect.create_DOT(
-        token=token,
-        DOT_name="TEST_DOT",
-        DOT_description="TEST_DOT description",
-        DOT_baseline=1234,
-        DOT_type_id="6019fa2072b96c00133df326",
-        METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
-    )
-    just_created_DOT_ID = tmp_res.json()["data"]["_id"]
+#     # First create a DOT
+#     tmp_res = aioconnect.create_DOT(
+#         token=token,
+#         DOT_name="TEST_DOT",
+#         DOT_description="TEST_DOT description",
+#         DOT_baseline=1234,
+#         DOT_type_id="6019fa2072b96c00133df326",
+#         METRIC_type_id="5fb7bf2f8ce87f0012fcc8f3",
+#     )
+#     just_created_DOT_ID = tmp_res.json()["data"]["_id"]
 
-    res = aioconnect.update_DOT_wID(
-        token=token,
-        DOT_id=just_created_DOT_ID,
-        actuals=987,
-        timestamp=datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
-    )
+#     res = aioconnect.update_DOT_wID(
+#         token=token,
+#         DOT_id=just_created_DOT_ID,
+#         actuals=987,
+#         timestamp=datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+#     )
 
-    assert res.json()["message"] == "success"
+#     assert res.json()["message"] == "success"
 
 
 def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
@@ -913,7 +913,8 @@ class Test_upsert_DOT:
         ]
         try:
             assert (
-                aioconnect.upsert_DOT(token=self.token, dataframe=df).status_code == 200
+                aioconnect.upsert_DOT(
+                    token=self.token, dataframe=df).status_code == 200
             )
         except ValueError as exc:
             print(exc)

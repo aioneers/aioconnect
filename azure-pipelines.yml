@@ -42,7 +42,7 @@ steps:
   - script: |
       pip install pytest pytest-azurepipelines
       pytest
-    displayName: 'Pytest. Everything. Skips allowed'
+    displayName: 'Pytest. Everything. Skips allowed.'
     env:
       SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
       displayName: 'Set token as environment token'
