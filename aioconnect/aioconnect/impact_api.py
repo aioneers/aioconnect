@@ -310,7 +310,8 @@ def get_object(
 
 
 def get_token(
-    email: str, password: str,
+    email: str,
+    password: str,
 ):
     """
     Log into AIO Impact and get a token.
@@ -630,7 +631,10 @@ def transform_string(arg_string: str) -> pd.DataFrame:
 
     df = pd.DataFrame(data=arg_string.split(";"))
 
-    df = df[0].str.split(pat="=", expand=True,)
+    df = df[0].str.split(
+        pat="=",
+        expand=True,
+    )
     df.columns = ["Field", "Value"]
 
     username = df[df["Field"] == " UserId"].Value
@@ -645,3 +649,76 @@ def transform_string(arg_string: str) -> pd.DataFrame:
     df_t.columns = df_t.iloc[0]
     df_t = df_t.iloc[2:]
     return (username, df_t)
+
+
+def upsert_DOT(
+    token: str,
+    # DOT_value: float,
+    # DOT_type: str,
+    # DOT_name: str = None,
+    # DOT_description: str = None,
+    # DOT_date_time: str = None,
+    dataframe,
+) -> list:
+    """
+    Create a new DOT in AIO Impact or update it if the DOT is already existing.
+    DOT_name : str
+        Name of the DOT
+
+    DOT_description : str = DOT_name
+        Description of the DOT.
+
+    DOT_type: str
+        Type of DOT
+
+    DOT_value: float
+        Value of the DOT
+
+    DOT_date_time: str
+        Datetime value of the DOT
+
+    Returns
+    -------
+
+    response : response
+        HTTP response.
+
+    Examples
+    --------
+    >>> token = aioconnect.get_token(
+    >>> email="firstname.lastname@aioneers.com", password="xxx",
+    >>> )
+    >>> res = aioconnect.upsert_DOT(
+    >>>     token=token,
+    >>>     DOT_name="TEST_DOT",
+    >>>     DOT_description="TEST_DOT description",
+    >>>     DOT_type="Standard",
+    >>>     DOT_value="2.71",
+    >>>     DOT_date_time:"03-05-2021  09:57:00",
+    >>> )
+
+    """
+    columns_list = [
+        "DOT_name",
+        "DOT_description",
+        "DOT_type",
+        "DOT_value",
+        "DOT_date_time",
+    ]
+
+    url = "https://dev-api.aioneers.tech/v1/digitalObjectTwins/"
+    url = url.rstrip("/")
+
+    # if DOT_description == None:
+    #     DOT_description = DOT_name
+
+    if all([item in dataframe.columns for item in columns_list]):
+
+        data = dataframe.to_json(orient="records")
+        response = requests.POST(
+            url=url, headers={"Authorization": f"Bearer {token}"}, data=data
+        )
+        response.raise_for_status()
+        return response
+    else:
+        raise ValueError("Columns not correct")

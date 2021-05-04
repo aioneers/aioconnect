@@ -6,6 +6,7 @@ from .impact_api import (
     create_bulk_DOT,
     get_list,
     get_object,
+    upsert_DOT,
 )
 
 from .helpers import json_extract, get_values
