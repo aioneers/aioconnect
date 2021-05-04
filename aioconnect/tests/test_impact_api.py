@@ -872,28 +872,28 @@ class Test_upsert_DOT:
         password=f"{password}",
     )
 
-    def test_single_DOT_correct_headers(self):
+    # def test_single_DOT_correct_headers(self):
 
-        from datetime import datetime
+    #     from datetime import datetime
 
-        columns = [
-            "DOT_name",
-            "DOT_description",
-            "DOT_type",
-            "DOT_value",
-            "DOT_date_time",
-        ]
+    #     columns = [
+    #         "DOT_name",
+    #         "DOT_description",
+    #         "DOT_type",
+    #         "DOT_value",
+    #         "DOT_date_time",
+    #     ]
 
-        dict = {
-            "DOT_name": "1000",
-            "DOT_description": "Basic Desktop_1000",
-            "DOT_Type": "Standard",
-            "DOT_Value": 2.7771,
-            "DOT_date_time": "03-05-2021  09:57:00",
-        }
-        df = pd.DataFrame(data=dict)
+    #     dict = {
+    #         "DOT_name": "1000",
+    #         "DOT_description": "Basic Desktop_1000",
+    #         "DOT_Type": "Standard",
+    #         "DOT_Value": 2.7771,
+    #         "DOT_date_time": "03-05-2021  09:57:00",
+    #     }
+    #     df = pd.DataFrame(data=dict)
 
-        assert aioconnect.upsert_DOT(token=self.token, dataframe=df).status_code == 200
+    #     assert aioconnect.upsert_DOT(token=self.token, dataframe=df).status_code == 200
 
     def test_single_DOT_incorrect_headers(self):
         columns_list = [

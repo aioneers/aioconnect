@@ -653,29 +653,12 @@ def transform_string(arg_string: str) -> pd.DataFrame:
 
 def upsert_DOT(
     token: str,
-    # DOT_value: float,
-    # DOT_type: str,
-    # DOT_name: str = None,
-    # DOT_description: str = None,
-    # DOT_date_time: str = None,
     dataframe,
 ) -> list:
     """
     Create a new DOT in AIO Impact or update it if the DOT is already existing.
-    DOT_name : str
-        Name of the DOT
-
-    DOT_description : str = DOT_name
-        Description of the DOT.
-
-    DOT_type: str
-        Type of DOT
-
-    DOT_value: float
-        Value of the DOT
-
-    DOT_date_time: str
-        Datetime value of the DOT
+    dataframe: pandas dataframe
+        dataframe containing DOT details
 
     Returns
     -------
@@ -690,11 +673,7 @@ def upsert_DOT(
     >>> )
     >>> res = aioconnect.upsert_DOT(
     >>>     token=token,
-    >>>     DOT_name="TEST_DOT",
-    >>>     DOT_description="TEST_DOT description",
-    >>>     DOT_type="Standard",
-    >>>     DOT_value="2.71",
-    >>>     DOT_date_time:"03-05-2021  09:57:00",
+    >>>     dataframe = df
     >>> )
 
     """
