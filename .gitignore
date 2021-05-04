@@ -16,6 +16,9 @@
 #Local py cache
 __pycache__/
 
+# Sphinx documentation
+aioconnect/doc/build/
+
 
 # macOS Finder index files
 
