@@ -43,6 +43,25 @@ extensions = [
 ]
 
 
+# Report warnings for all validation checks except
+numpydoc_validation_checks = {
+    "all",
+    "GL01",
+    "GL02",
+    "SS04",
+    "SS05",
+    "ES01",
+    "YD01",
+    "SA01",
+    "SA02",
+    "SA03",
+    "SA04",
+    "EX01",
+}
+numpydoc_show_class_members = False
+
+autosummary_generate = True
+
 autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
@@ -64,7 +83,7 @@ html_theme = "pydata_sphinx_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["./build/html/_static"]
+html_static_path = []
 
 
 # -- Extension configuration -------------------------------------------------

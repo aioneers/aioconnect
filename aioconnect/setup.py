@@ -41,7 +41,6 @@ setuptools.setup(
         "numpydoc",
         "pandas",
         "requests",
-        "datetime",
         "azure-keyvault",
         "azure-identity",
     ],

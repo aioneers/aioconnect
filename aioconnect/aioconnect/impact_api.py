@@ -15,28 +15,28 @@ def get_list(
     object: str = "dotTypes",
     key: str = "_id",
 ) -> list:
-    """get List of values for a key of an object of the API
+    """Get List of values for a key of an object of the API.
 
     Parameters
     ----------
     token : str
-        Token which was returned from the user login
-    url : str, optional
-        Url of the API, by default "https://dev-api.aioneers.tech/v1/"
-    object : str, optional
-        object to be extracted from the API, by default "dotTypes"
-    key : str, optional
-        key of the , by default "_id"
+        Token which was returned from the user login.
+    url : str = "https://dev-api.aioneers.tech/v1/"
+        Url of the API.
+    object : str = "dotTypes"
+        Object to be extracted from the API.
+    key : str = "_id"
+        Key of the DOT.
 
     Returns
     -------
     list
-        Values for the provided key of the object
+        Values for the provided key of the object.
 
     Raises
     ------
     ValueError
-        In case there was an object type given which does not exist
+        In case there was an object type given which does not exist.
     """
 
     json_data = get_object(token=token, url=url, object=object)
@@ -49,26 +49,26 @@ def get_object(
     url: str = "https://dev-api.aioneers.tech/v1/",
     object: str = "dotTypes",
 ) -> list:
-    """get_object [summary]
+    """Get JSON object.
 
     Parameters
     ----------
     token : str
-        Token which was returned from the user login
-    url : str, optional
-        Url of the API, by default "https://dev-api.aioneers.tech/v1/"
-    object : str, optional
-        object to be extracted from the API, by default "dotTypes"
+        Token which was returned from the user login.
+    url : str = "https://dev-api.aioneers.tech/v1/"
+        Url of the API.
+    object : str = "dotTypes"
+        Object to be extracted from the API.
 
     Returns
     -------
     list
-        [description]
+        List of JSON objects.
 
     Raises
     ------
     ValueError
-        [description]
+        Raises ValueError when the input is not correct.
     """
     url = url.strip("/")
     object = object.lower()
@@ -310,10 +310,10 @@ def get_object(
 
 
 def get_token(
-    email: str, password: str,
+    email: str,
+    password: str,
 ):
-    """
-    Log into AIO Impact and get a token.
+    """Log into AIO Impact and get a token.
 
     Parameters
     ----------
@@ -326,7 +326,7 @@ def get_token(
     Returns
     -------
 
-    token : str
+    str
         Bearer token.
 
     Examples
@@ -364,7 +364,7 @@ def delete_DOT_wID(token: str, DOT_id: str):
     Returns
     -------
 
-    response : response
+    requests.Response
         Returns the HTTP response.
 
     Examples
@@ -389,70 +389,70 @@ def delete_DOT_wID(token: str, DOT_id: str):
     return response
 
 
-def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = None):
-    """
-    Function to update a DOT and add the most recent actual value.
+# def update_DOT_wID(token: str, DOT_id: str, actuals: float, timestamp: str = None):
+#     """
+#     Function to update a DOT and add the most recent actual value.
 
-    Parameters
-    ----------
-    token : str
-        Token which was returned from the user login.
+#     Parameters
+#     ----------
+#     token : str
+#         Token which was returned from the user login.
 
-    DOT_id : str
-        ID of the DOT.
+#     DOT_id : str
+#         ID of the DOT.
 
-    actuals : float
-        Most recent actuals value.
+#     actuals : float
+#         Most recent actuals value.
 
-    timestamp : str = None
-        Timestamp of the actual data in the format .
+#     timestamp : str = None
+#         Timestamp of the actual data in the format .
 
-    Returns
-    -------
+#     Returns
+#     -------
 
-    response : response
-        Returns the HTTP response.
+#     response : response
+#         Returns the HTTP response.
 
-    Examples
-    --------
-    >>> from datetime import datetime
-    >>>
-    >>> token = aioconnect.get_token(
-    >>> email="firstname.lastname@aioneers.com", password="xxx",
-    >>> )
-    >>> res = update_DOT_wID(
-    >>>     token = token,
-    >>>     DOT_id = "606b54d1c8153d00193838bd",
-    >>>     actuals = 889,
-    >>>     timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
-    >>> )
-    """
+#     Examples
+#     --------
+#     >>> from datetime import datetime
+#     >>>
+#     >>> token = aioconnect.get_token(
+#     >>> email="firstname.lastname@aioneers.com", password="xxx",
+#     >>> )
+#     >>> res = update_DOT_wID(
+#     >>>     token = token,
+#     >>>     DOT_id = "606b54d1c8153d00193838bd",
+#     >>>     actuals = 889,
+#     >>>     timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+#     >>> )
+#     """
 
-    if timestamp is None:
-        datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+#     if timestamp is None:
+#         datetime.now().strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-    url = "https://dev-api.aioneers.tech/v1/trackingObjects"
-    url = url.rstrip("/")
+#     url = "https://dev-api.aioneers.tech/v1/trackingObjects"
+#     url = url.rstrip("/")
 
-    # Get actuals history
-    headers = {"Authorization": f"Bearer {token}"}
-    params = {"_id": {DOT_id}}
-    response = requests.get(url, headers=headers, params=params)
-    response.raise_for_status()
+#     # Get actuals history
+#     headers = {"Authorization": f"Bearer {token}"}
+#     params = {"_id": {DOT_id}}
+#     response = requests.get(url, headers=headers, params=params)
+#     response.raise_for_status()
 
-    actuals_history = response.json()["data"]["payload"][0]["actuals"]
+#     actuals_history = response.json()["data"]["payload"][0]["actuals"]
 
-    # Append actuals history with new value
-    new_actuals = {"timestamp": timestamp, "value": actuals}
-    actuals_history.append(new_actuals)
+#     # Append actuals history with new value
+#     new_actuals = {"timestamp": timestamp, "value": actuals}
+#     actuals_history.append(new_actuals)
 
-    data = {
-        "_id": DOT_id,
-        "actuals": actuals_history,
-    }
+#     data = {
+#         "_id": DOT_id,
+#         "actuals": actuals_history,
+#     }
 
-    response = requests.put(url=url, json=data, headers=headers)
-    return response
+#     response = requests.put(url=url, json=data, headers=headers)
+#     return response
 
 
 def create_DOT(
@@ -468,6 +468,9 @@ def create_DOT(
 
     Parameters
     ----------
+    token : str
+        Token which was returned from the user login.
+
     DOT_name : str
         Name of the DOT.
 
@@ -486,7 +489,7 @@ def create_DOT(
     Returns
     -------
 
-    response : response
+    requests.Response
         HTTP response.
 
     Examples
@@ -557,7 +560,7 @@ def create_bulk_DOT(
     Returns
     -------
 
-    response : response
+    requests.Response
         Returns the HTTP response.
 
     Examples
@@ -630,7 +633,10 @@ def transform_string(arg_string: str) -> pd.DataFrame:
 
     df = pd.DataFrame(data=arg_string.split(";"))
 
-    df = df[0].str.split(pat="=", expand=True,)
+    df = df[0].str.split(
+        pat="=",
+        expand=True,
+    )
     df.columns = ["Field", "Value"]
 
     username = df[df["Field"] == " UserId"].Value
@@ -645,3 +651,58 @@ def transform_string(arg_string: str) -> pd.DataFrame:
     df_t.columns = df_t.iloc[0]
     df_t = df_t.iloc[2:]
     return (username, df_t)
+
+
+def upsert_DOT(
+    token: str,
+    dataframe: pd.DataFrame,
+) -> list:
+    """Create a new DOT in AIO Impact or update it if the DOT is already existing.
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+
+    dataframe : Pandas.DataFrame
+        Dataframe containing DOT details.
+
+    Returns
+    -------
+    requests.Response
+        HTTP response.
+
+    Examples
+    --------
+    >>> token = aioconnect.get_token(
+    >>> email="firstname.lastname@aioneers.com", password="xxx",
+    >>> )
+    >>> res = aioconnect.upsert_DOT(
+    >>>     token=token,
+    >>>     dataframe = df
+    >>> )
+    """
+    columns_list = [
+        "DOT_name",
+        "DOT_description",
+        "DOT_type",
+        "DOT_value",
+        "DOT_date_time",
+    ]
+
+    url = "https://dev-api.aioneers.tech/v1/digitalObjectTwins/"
+    url = url.rstrip("/")
+
+    # if DOT_description == None:
+    #     DOT_description = DOT_name
+
+    if all([item in dataframe.columns for item in columns_list]):
+
+        data = dataframe.to_json(orient="records")
+        response = requests.POST(
+            url=url, headers={"Authorization": f"Bearer {token}"}, data=data
+        )
+        response.raise_for_status()
+        return response
+    else:
+        raise ValueError("Columns not correct")
