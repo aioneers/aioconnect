@@ -10,6 +10,63 @@ from azure.identity import AzureCliCredential
 from requests.models import guess_json_utf
 
 
+class Test_get_actions:
+    password = aioconnect.vault_get_secret(
+        scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
+    )
+    token = aioconnect.get_token(
+        email="sebastian.szilvas@aioneers.com",
+        password=f"{password}",
+    )
+
+    def test_existing_action(self):
+
+        id = "60660193e1a9d700153cabfc"
+
+        response = aioconnect.get_actions(
+            token=self.token,
+            action=id,
+            type="_id"
+        )
+
+        # Check the result
+        assert response.json()["data"]["payload"][0]["_id"] == id
+        assert isinstance(response.json()["data"]["payload"][0]["_id"], str)
+
+        # Check the status
+        assert response.status_code == 200
+
+    # def test_nonexisting_action(self):
+
+    #     id = "60695193e782892398293253cabfc"
+
+    #     try:
+    #         response = aioconnect.get_actions(
+    #             token=self.token,
+    #             action=id
+    #         )
+
+    #     except requests.exceptions.HTTPError as exception:
+    #         print(exception.response.status_code)
+    #         assert exception.response.status_code == 400
+    #     # assert exception.json()["error"] == "Bad request"
+
+    #     assert False
+
+    # def test_wrong_input(self):
+
+    #     id = "60660193e7834783253cabfc"
+
+    #     try:
+    #         aioconnect.get_actions(
+    #             token=self.token,
+    #             action=id,
+    #             type="_abc"
+    #         )
+    #     except ValueError:
+    #         pass
+
+
 class Test_get_object:
     password = aiox.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"

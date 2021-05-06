@@ -706,3 +706,32 @@ def upsert_DOT(
         return response
     else:
         raise ValueError("Columns not correct")
+
+
+def get_actions(token: str, action: str, type: int = "_id") -> requests.Response:
+    """Gets a list of actions.
+
+    Parameters
+    ----------
+    token : str
+        Token which was returned from the user login.
+    action : str
+        Identifier of the action.
+    type : str
+        Type of what the input in the field "action" is.
+
+    Returns
+    -------
+    requests.Response
+        HTTP Response.
+    """
+
+    url = "https://dev-api.aioneers.tech/v1/actions/"
+    url = url.rstrip("/")
+    url += "?_id=" + action
+
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(url=url, headers=headers)
+    response.raise_for_status()
+
+    return response
