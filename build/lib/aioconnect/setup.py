@@ -26,6 +26,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/aioneers/aioconnect",
     download_url="https://github.com/aioneers/aioconnect/tags",
+    # packages=setuptools.find_packages(),
     packages=['aioconnect'],
     classifiers=[
         "Programming Language :: Python :: 3",

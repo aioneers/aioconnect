@@ -20,6 +20,8 @@ __pycache__/
 aioconnect/doc/build/
 
 
+./dist/
+
 # macOS Finder index files
 
 .DS_Store
