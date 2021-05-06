@@ -17,7 +17,7 @@ long_description = "not yet working"
 
 setuptools.setup(
     name="aioconnect",
-    version="0.0.7",
+    version="0.0.8",
     author="AIO",
     author_email="maintainer@aioneers.com",
     license="MIT",
