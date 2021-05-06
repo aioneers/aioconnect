@@ -9,3 +9,4 @@ This page gives an overview of all public objects, functions and methods.
    
    reference/helpers
    reference/impact_api
+   reference/azure_key_vault
