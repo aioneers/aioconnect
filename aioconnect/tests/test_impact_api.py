@@ -1,7 +1,6 @@
 import json
 import aioconnect
 from aioconnect.helpers import get_values
-import aiox
 import requests
 import pandas as pd
 
@@ -11,7 +10,7 @@ from requests.models import guess_json_utf
 
 
 class Test_get_object:
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
     token = aioconnect.get_token(
@@ -109,7 +108,7 @@ class Test_get_object:
 
 
 class Test_get_list:
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
     token = aioconnect.get_token(
@@ -254,7 +253,7 @@ class Test_get_list:
 
 # def test_get_DOT_type_id_wDOT_type_Name():
 
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 #     token = aioconnect.get_token(
@@ -462,7 +461,7 @@ class Test_get_list:
 
 # def test_get_metric_type_id_wMetric_type_name():
 
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 #     token = aioconnect.get_token(
@@ -506,7 +505,7 @@ class Test_get_list:
 
 
 # def test_create_or_update_DOT_wName_wDescription_DOT_not_existing():
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 #     token = aioconnect.get_token(
@@ -537,7 +536,7 @@ class Test_get_list:
 
 
 # def test_create_or_update_DOT_wName_wDescription_DOT_existing():
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 #     token = aioconnect.get_token(
@@ -578,7 +577,7 @@ class Test_get_list:
 
 
 # def test_create_or_update_DOT_wName_wDescription_multipleDOTs():
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 
@@ -628,7 +627,7 @@ class Test_get_list:
 
 
 # def test_get_initiative_templates():
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 
@@ -645,7 +644,7 @@ class Test_get_list:
 
 class Test_get_token:
     def test_correct_credentials(self):
-        password = aiox.vault_get_secret(
+        password = aioconnect.vault_get_secret(
             scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
         )
 
@@ -669,7 +668,7 @@ class Test_get_token:
 
 
 def test_delete_DOT_wID():
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -699,7 +698,7 @@ def test_delete_DOT_wID():
 
 
 def test_create_DOT():
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -728,7 +727,7 @@ def test_create_DOT():
 
 
 def test_create_DOT_wo_DOT_description():
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -756,7 +755,7 @@ def test_create_DOT_wo_DOT_description():
 
 
 # def test_update_DOT_wID_wo_timestamp():
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 
@@ -786,7 +785,7 @@ def test_create_DOT_wo_DOT_description():
 # def test_update_DOT_wID_w_timestamp():
 #     from datetime import datetime
 
-#     password = aiox.vault_get_secret(
+#     password = aioconnect.vault_get_secret(
 #         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
 #     )
 
@@ -821,7 +820,7 @@ def test_create_bulk_DOT_wDOT_type_wMETRIC_type():
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
 
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -845,7 +844,7 @@ def test_create_bulk_DOT_woDOT_type_woMETRIC_type():
         arg_string="UserDirectory=AZUREQLIK; UserId=sebastian.szilvas@aioneers.com;DOT_name=1045,1058,1110,1449,3114;DOT_description=4K Ultra HD_1045,4K Ultra HD_1110,4K Ultra HD_1449,4K Ultra HD_3114,TVs_1000_1058;DOT_baseline=10846.75202,210810.99078,23874.0138,77647.14595363676,78107.53207446463"
     )
 
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
@@ -863,7 +862,7 @@ def test_create_bulk_DOT_woDOT_type_woMETRIC_type():
 
 
 class Test_upsert_DOT:
-    password = aiox.vault_get_secret(
+    password = aioconnect.vault_get_secret(
         scope="aio-data-science-key", key="sebastian-szilvas-aio-impact"
     )
 
