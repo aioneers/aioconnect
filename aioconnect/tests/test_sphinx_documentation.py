@@ -47,8 +47,8 @@ def test_make_html(capsys):
     captured = capsys.readouterr().out
     print(captured.split("\n"))
 
+    # Remove the files which have been created
+    shutil.rmtree(path_to_docs + "/build")
+
     assert captured.find("WARNING:") == -1
     assert captured.find("build succeeded") != -1
-
-    # For some reason this does not work on the pipeline
-    shutil.rmtree(path_to_docs + "/build")
