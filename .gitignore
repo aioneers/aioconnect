@@ -17,8 +17,11 @@
 __pycache__/
 
 # Sphinx documentation
-aioconnect/doc/build/
+./doc/build/
 
+# PyPI files
+./dist/*
+./build/*
 
 # macOS Finder index files
 
