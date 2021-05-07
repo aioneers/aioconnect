@@ -2,27 +2,27 @@ trigger:
   - main
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: 'ubuntu-latest'
 strategy:
   matrix:
     Python39:
-      python.version: "3.9"
+      python.version: '3.9'
 
 steps:
   - script: |
       pip install wheel
       pip install twine
-    displayName: "Install library with dependencies"
+    displayName: 'Install library with dependencies'
 
   - script: |
-      python ./aioconnect/setup.py bdist_wheel
-    displayName: "Artifact creation"
+      python ./setup.py bdist_wheel
+    displayName: 'Artifact creation'
 
   - task: TwineAuthenticate@1
-    displayName: "Twine Authenticate"
+    displayName: 'Twine Authenticate'
     inputs:
-      pythonUploadServiceConnection: "PyPI_aioconnect"
+      pythonUploadServiceConnection: 'PyPI_aioconnect'
 
   - script: |
       python -m twine upload --skip-existing --verbose --repository "aioconnect" --config-file $(PYPIRC_PATH) dist/*.whl
-    displayName: "Publish to PyPi through Twine"
+    displayName: 'Publish to PyPi through Twine'
