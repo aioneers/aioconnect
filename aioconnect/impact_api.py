@@ -7,7 +7,6 @@ import pandas as pd
 from datetime import datetime
 import json
 from aioconnect.helpers import *
-from nocasedict import NocaseDict
 from dotenv import load_dotenv
 from os import getenv
 
