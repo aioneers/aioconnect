@@ -42,5 +42,6 @@ setuptools.setup(
         "requests",
         "azure-keyvault",
         "azure-identity",
+        "python-dotenv",
     ],
 )

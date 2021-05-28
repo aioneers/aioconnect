@@ -1,5 +1,5 @@
 schedules:
-  - cron: '0 0 * * *'
+  - cron: "0 0 * * *"
     displayName: Daily midnight build
     branches:
       include:
@@ -10,34 +10,35 @@ trigger:
   - dev
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 strategy:
   matrix:
     Python39:
-      python.version: '3.9'
+      python.version: "3.9"
 
 steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(python.version)'
-    displayName: 'Use Python $(python.version)'
+      versionSpec: "$(python.version)"
+    displayName: "Use Python $(python.version)"
 
   - script: |
       python -m pip install --upgrade pip
       pip install .
-    displayName: 'Install library with dependencies'
+    displayName: "Install library with dependencies"
 
   - task: AzureKeyVault@1
     inputs:
-      azureSubscription: 'aioneersMainSubscription(603f9c05-0a2a-4daa-914d-8242a3a4beb8)'
-      KeyVaultName: 'aio-data-science-key'
-      SecretsFilter: '*'
+      azureSubscription: "aioneersMainSubscription(603f9c05-0a2a-4daa-914d-8242a3a4beb8)"
+      KeyVaultName: "aio-data-science-key"
+      SecretsFilter: "*"
       RunAsPreJob: false
 
   - script: |
       pip install pytest pytest-azurepipelines
       pytest
-    displayName: 'Pytest. Everything. Skips allowed.'
+    displayName: "Pytest. Everything. Skips allowed."
     env:
       SEBASTIAN_SZILVAS_AIO_IMPACT: $(sebastian-szilvas-aio-impact)
-      displayName: 'Set token as environment token'
+      CONNECT_URL: $(connect-url)
+      displayName: "Set token as environment token"
