@@ -103,6 +103,11 @@ def get_token(
     str
         Bearer token.
 
+    Raises
+    -------
+    requests.exceptions.HTTPError
+        If the username and password are wrong.
+
     Examples
     --------
     >>> aioconnect.get_token(
@@ -115,19 +120,11 @@ def get_token(
     headers = {"Content-Type": "application/json"}
 
     response = requests.request("POST", url, headers=headers, data=payload)
+    response.raise_for_status()
+
     token = response.json()["token"]
 
     return token
-
-    # url = getenv("CONNECT_URL") + "/login/"
-    # url = url.rstrip("/")
-
-    # payload = {"email": email, "password": password}
-
-    # response = requests.post(url=url, data=payload)
-    # response.raise_for_status()
-
-    # token = response.json()["data"]["token"]
 
 
 # def create_DOT(
@@ -238,24 +235,25 @@ def upsert_DOT(
     >>>     dataframe = df
     >>> )
     """
-    columns_list = [
-        "DOT_name",
-        "DOT_description",
-        "DOT_type",
-        "DOT_value",
-        "DOT_date_time",
-    ]
 
     url = getenv("CONNECT_URL") + "/digitalObjectTwins/"
     url = url.rstrip("/")
 
-    if all([item in dataframe.columns for item in columns_list]):
+    columns_list = [
+        "externalID",
+        "name",
+        "metricType",
+        "actuals",
+    ]
 
-        data = dataframe.to_json(orient="records")
-        response = requests.POST(
-            url=url, headers={"Authorization": f"Bearer {token}"}, data=data
-        )
+    if all([item in dataframe.columns for item in columns_list]):
+        payload = dataframe.to_json(orient="records")
+
+        response = requests.put(
+            url=url, headers={"Authorization": f"Bearer {token}",
+                              'Content-Type': 'application/json'}, data=payload)
         response.raise_for_status()
+
         return response
     else:
-        raise ValueError("Columns not correct")
+        raise KeyError("Columns not correct")

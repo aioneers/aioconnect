@@ -1,13 +1,14 @@
-import json
+
+import pytest
 import aioconnect
 from aioconnect.helpers import get_values
 import requests
-from requests.exceptions import InvalidURL
+
 import pandas as pd
 
-from azure.keyvault.secrets import SecretClient
-from azure.identity import AzureCliCredential
+
 from requests.models import guess_json_utf
+from datetime import datetime
 
 
 class Test_get_object:
@@ -18,32 +19,6 @@ class Test_get_object:
         email="sebastian.szilvas@aioneers.com",
         password=f"{password}",
     )
-
-    # def test_dot(self):
-    #     assert aioconnect.get_object(
-    #         token=self.token,
-    #         object="dottypes",
-    #     )
-
-    # def test_DOT(self):
-    #     assert aioconnect.get_object(
-    #         token=self.token,
-    #         object="DOTtypes",
-    #     )
-
-    # def test_measures(self):
-    #     assert aioconnect.get_object(
-    #         token=self.token,
-    #         object="measures",
-    #     )
-
-    # def test_initiatives(self):
-    #     print("the correct URL is:")
-    #     print(CONNECT_URL1)
-    #     assert aioconnect.get_object(
-    #         token=self.token,
-    #         object="initiatives",
-    #     )
 
     def test_digitalObjectTwins(self):
         assert aioconnect.get_object(
@@ -113,9 +88,8 @@ class Test_get_token:
                 email="sebastian.szilvas@aioneers.com",
                 password="wrong password",
             )
-        except KeyError as exception:
-            print(exception)
-            # assert exception.response.status_code == 401
+        except requests.exceptions.HTTPError as exception:
+            assert exception.response.status_code == 401
 
 
 # def test_delete_DOT_wID():
@@ -187,48 +161,99 @@ class Test_upsert_DOT:
         password=f"{password}",
     )
 
-    # def test_single_DOT_correct_headers(self):
+    def test_single_DOT_correct_headers(self):
+        data = {
+            "externalID": ["8493", ],
+            "name": ["4K Ultra HD_1008", ],
+            "metricType": ["Financial", ],
+            "actuals": [[
+                {
+                        "timestamp": "Mon, 02 Mar 2020 00:00:00 GMT",
+                        "value": 2398
+                        }
+            ],
+            ]
+        }
+        df = pd.DataFrame.from_dict(data)
 
-    #     from datetime import datetime
+        res = aioconnect.upsert_DOT(
+            token=self.token, dataframe=df)
 
-    #     columns = [
-    #         "DOT_name",
-    #         "DOT_description",
-    #         "DOT_type",
-    #         "DOT_value",
-    #         "DOT_date_time",
-    #     ]
+        assert res.status_code == 200
+        assert (res.json()["created"] == len(df.index) or
+                res.json()["updated"] == len(df.index))
+        assert res.json()["failed"] == 0
 
-    #     dict = {
-    #         "DOT_name": "1000",
-    #         "DOT_description": "Basic Desktop_1000",
-    #         "DOT_Type": "Standard",
-    #         "DOT_Value": 2.7771,
-    #         "DOT_date_time": "03-05-2021  09:57:00",
-    #     }
-    #     df = pd.DataFrame(data=dict)
+    def test_two_DOTs_correct_headers(self):
+        data = {
+            "externalID": ["8493", "7843"],
+            "name": ["4K Ultra HD_1008", "sdfjlsdf"],
+            "metricType": ["Financial", "Financial"],
+            "actuals": [[
+                {
+                        "timestamp": "Mon, 02 Mar 2020 00:00:00 GMT",
+                        "value": 2398
+                        }
+            ], [
+                {
+                    "timestamp": "Mon, 02 Mar 2020 00:00:00 GMT",
+                    "value": 50000
+                }
+            ]
+            ]
+        }
+        df = pd.DataFrame.from_dict(data)
 
-    #     assert aioconnect.upsert_DOT(token=self.token, dataframe=df).status_code == 200
+        res = aioconnect.upsert_DOT(
+            token=self.token, dataframe=df)
+
+        assert res.status_code == 200
+        assert (res.json()["created"] == len(df.index) or
+                res.json()["updated"] == len(df.index))
+        assert res.json()["failed"] == 0
 
     def test_single_DOT_incorrect_headers(self):
-        columns_list = [
-            "DOT_description",
-            "DOT_type",
-            "DOT_value",
-            "DOT_date_time",
-        ]
+        data = {
+            "jksljfls": ["8493", ],
+            "dkflusdf": ["4K Ultra HD_1008", ],
+            "dfjksdf": ["Financial", ],
+            "dfd": [[
+                {
+                    "timestamp": "Mon, 02 Mar 2020 00:00:00 GMT",
+                    "value": 2398
+                }
+            ],
+            ]
+        }
+        df = pd.DataFrame.from_dict(data)
 
-        df = pd.DataFrame(columns=columns_list)
-
-        df.loc[0] = [
-            "Basic Desktop_1000",
-            "Standard",
-            2.7771,
-            "03-05-2021 09:57:00",
-        ]
         try:
-            assert (
-                aioconnect.upsert_DOT(token=self.token, dataframe=df).status_code == 200
-            )
-        except ValueError as exc:
-            print(exc)
+            aioconnect.upsert_DOT(
+                token=self.token, dataframe=df)
+
+        except KeyError as exc:
+            assert "Columns not correct" in str(exc)
+
+    @pytest.mark.skip(reason="takes too long")
+    def test_single_DOT_correct_headers_negative_values(self):
+        data = {
+            "externalID": ["8493", ],
+            "name": ["4K Ultra HD_1008", ],
+            "metricType": ["Financial", ],
+            "actuals": [[
+                {
+                        "timestamp": "Mon, 02 Mar 2020 00:00:00 GMT",
+                        "value": -2398
+                        }
+            ],
+            ]
+        }
+        df = pd.DataFrame.from_dict(data)
+
+        res = aioconnect.upsert_DOT(
+            token=self.token, dataframe=df)
+
+        assert res.status_code == 200
+        assert res.json()["created"] == 0
+        assert res.json()["updated"] == 0
+        assert res.json()["failed"] == len(df.index)
